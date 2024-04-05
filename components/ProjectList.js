@@ -161,7 +161,7 @@ const ProjectList = ({ onClose }) => {
 
                     {
                         projectListData && projectListData.map((project, index) => (
-                            <View style={{ marginBottom: 8, padding: 6, width: '100%', borderColor: 'grey', borderWidth: 1, borderRadius: 4 }}>
+                            <View style={{ marginBottom: 8, padding: 6, width: '100%', borderColor: 'grey', borderWidth: 1, borderRadius: 4 }} key={index}>
 
                                 <View style={{
                                     flexDirection: 'row',

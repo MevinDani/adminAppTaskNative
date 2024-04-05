@@ -16,6 +16,7 @@ import beyondScope from '../images/task_end_in_path.png'
 import AddNewTask from './AddNewTask';
 import TaskStatisticsChart from './TaskStatisticsChart';
 import ProjectList from './ProjectList';
+import NewProject from './NewProject';
 
 
 const Home = () => {
@@ -25,6 +26,8 @@ const Home = () => {
     const [showNewTask, setShowNewTask] = useState(false)
 
     const [showProjectList, setShowProjectList] = useState(false)
+
+    const [showNewProject, setShowNewProject] = useState(false)
 
     useEffect(() => {
         const fetchAllTasks = async () => {
@@ -98,8 +101,8 @@ const Home = () => {
                             <Image style={styles.projectImg} source={require('../images/addNewTaskIcon.png')}></Image>
                             <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>New Task</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.projectTask}>
+                    </TouchableOpacity >
+                    <TouchableOpacity style={styles.projectTask} onPress={() => setShowNewProject(!showNewProject)}>
                         <View style={{
                             justifyContent: 'center', alignItems: 'center'
                         }}>
@@ -260,6 +263,11 @@ const Home = () => {
             {
                 showProjectList &&
                 <ProjectList onClose={() => setShowProjectList(false)} />
+            }
+
+            {
+                showNewProject &&
+                <NewProject onClose={() => setShowNewProject(false)} />
             }
         </SafeAreaView >
     )
