@@ -17,9 +17,12 @@ import AddNewTask from './AddNewTask';
 import TaskStatisticsChart from './TaskStatisticsChart';
 import ProjectList from './ProjectList';
 import NewProject from './NewProject';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Home = () => {
+
+    const navigation = useNavigation()
 
     const [allTaskData, setAllTaskData] = useState(null)
 
@@ -70,6 +73,14 @@ const Home = () => {
             // default:
             //     return require('../images/default_image.png');
         }
+    };
+
+    const gotoTaskDetail = (task) => {
+        navigation.navigate('TaskDetails', {
+            task_id: task.task_id,
+            created_on: task.created_on,
+            task_scheduledon: task.task_scheduledon
+        });
     };
 
     // console.log('allTaskData', allTaskData)
@@ -229,10 +240,10 @@ const Home = () => {
 
                         {
                             allTaskData && allTaskData?.map((task, index) => (
-                                <TouchableOpacity style={styles.tableRow} key={index}>
-                                    <Text style={styles.dataCell}>
+                                <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
+                                    <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
                                         <Image style={{ width: 25, height: 25, marginRight: 4 }} source={getImageForStatus(task.latest_status)}></Image>
-                                        {task.task_name}
+                                        <Text>{task.task_name}</Text>
                                     </Text>
                                     <Text style={styles.dataCell}>{task.latest_status}</Text>
                                     <Text style={styles.dataCell}>{dayjs(task.created_on).format('DD/MM/YYYY')}</Text>

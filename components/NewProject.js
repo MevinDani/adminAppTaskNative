@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ToastManager, { Toast } from 'toastify-react-native'
 import axios from 'axios'
 
@@ -15,14 +15,44 @@ const NewProject = ({ onClose }) => {
         Toast.success('Project Created Successfully')
     }
 
-    // console.log(description, jobCode)
+    const handleProjectCreate = async () => {
 
-    const DupCheck = async () => {
         try {
             const response = await axios.get(`https://cubixweberp.com:156/api/DupCheck/CPAYS/JOBCODE/${jobCode}`)
             if (response.data[0].COUNT === 0) {
                 setDupcheck(0)
                 console.log(response.data)
+
+                let reqData = {
+                    mode: "ENTRY",
+                    cmpcode: "CPAYS",
+                    jobcode: jobCode,
+                    site_description: description,
+                    job_status: "NEW",
+                    transid: "DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD"
+                }
+
+                let stringifiedJson = JSON.stringify(reqData)
+
+                console.log(stringifiedJson)
+
+                try {
+                    const response = await axios.post(`https://cubixweberp.com:156/api/CRMProjectReg/ENTRY/CPAYS/${jobCode}/${description}/NEW/DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD`, stringifiedJson, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+                    if (response.status === 200) {
+                        console.log(response.data)
+                        setDescription('')
+                        setJobCode('')
+                        setDupcheck('')
+                        successToast()
+                    }
+                } catch (error) {
+                    console.log('ProjectCreateErr', error)
+                }
             } else {
                 setDupcheck(1)
                 console.log(response.data)
@@ -30,44 +60,46 @@ const NewProject = ({ onClose }) => {
         } catch (error) {
             console.log('DupCheck', error)
         }
-    }
 
-    const handleProjectCreate = async () => {
-        await DupCheck()
+        // console.log("Before calling DupCheck");
+        // await DupCheck();
+        // console.log("After calling DupCheck");
 
-        if (dupCheck === 0) {
+        // console.log("dupCheck value:", dupCheck);
 
-            let reqData = {
-                mode: "ENTRY",
-                cmpcode: "CPAYS",
-                jobcode: jobCode,
-                site_description: description,
-                job_status: "NEW",
-                transid: "DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD"
-            }
+        // if (fireApi === 0) {
 
-            let stringifiedJson = JSON.stringify(reqData)
+        //     let reqData = {
+        //         mode: "ENTRY",
+        //         cmpcode: "CPAYS",
+        //         jobcode: jobCode,
+        //         site_description: description,
+        //         job_status: "NEW",
+        //         transid: "DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD"
+        //     }
 
-            console.log(stringifiedJson)
+        //     let stringifiedJson = JSON.stringify(reqData)
 
-            try {
-                const response = await axios.post(`https://cubixweberp.com:156/api/CRMProjectReg/ENTRY/CPAYS/${jobCode}/${description}/NEW/DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD`, stringifiedJson, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+        //     console.log(stringifiedJson)
 
-                if (response.status === 200) {
-                    console.log(response.data)
-                    setDescription('')
-                    setJobCode('')
-                    setDupcheck('')
-                    successToast()
-                }
-            } catch (error) {
-                console.log('ProjectCreateErr', error)
-            }
-        }
+        //     try {
+        //         const response = await axios.post(`https://cubixweberp.com:156/api/CRMProjectReg/ENTRY/CPAYS/${jobCode}/${description}/NEW/DE9ECBC2-F1DF-40F1-BC67-4BD3087978BD`, stringifiedJson, {
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             }
+        //         })
+
+        //         if (response.status === 200) {
+        //             console.log(response.data)
+        //             setDescription('')
+        //             setJobCode('')
+        //             setDupcheck('')
+        //             successToast()
+        //         }
+        //     } catch (error) {
+        //         console.log('ProjectCreateErr', error)
+        //     }
+        // }
     }
 
     return (

@@ -9,5 +9,6 @@ import Home from './components/Home';
 import MainApp from './MainApp';
 import ProjectList from './components/ProjectList';
 import NewProject from './components/NewProject';
+import TaskDetails from './components/TaskDetails';
 
 AppRegistry.registerComponent(appName, () => MainApp);
