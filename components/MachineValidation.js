@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const MachineValidation = () => {
@@ -86,6 +86,9 @@ const MachineValidation = () => {
                     storedUserDataArray.push(newCompanyData);
 
                     await AsyncStorage.setItem("userDataArray", JSON.stringify(storedUserDataArray));
+                    // setPrivateKey('')
+                    // setRegView(false)
+                    // setCmpCodeView(true)
                     // await AsyncStorage.setItem("selectedCompany", JSON.stringify(newCompanyData));
 
                     navigation.navigate('LoginPage');
@@ -104,24 +107,32 @@ const MachineValidation = () => {
         }
     }
 
-    useEffect(() => {
-        const checkUserData = async () => {
-            try {
-                const storedUserDataArrayJson = await AsyncStorage.getItem("userDataArray");
-                if (storedUserDataArrayJson) {
-                    const storedUserDataArray = JSON.parse(storedUserDataArrayJson);
-                    if (storedUserDataArray.length > 0) {
-                        // Redirect to LoginPage if userDataArray exists and has values
-                        navigate('/login');
+    useFocusEffect(
+        React.useCallback(() => {
+            const checkUserData = async () => {
+                try {
+                    const storedUserDataArrayJson = await AsyncStorage.getItem("userDataArray");
+                    if (storedUserDataArrayJson) {
+                        const storedUserDataArray = JSON.parse(storedUserDataArrayJson);
+                        if (storedUserDataArray.length > 0) {
+                            // Redirect to LoginPage if userDataArray exists and has values
+                            navigation.navigate('LoginPage');
+                        }
+                    } else {
+                        // navigation.navigate('LoginPage');
                     }
+                } catch (error) {
+                    console.error('Error checking user data:', error);
                 }
-            } catch (error) {
-                console.error('Error checking user data:', error);
-            }
-        };
+            };
 
-        checkUserData(); // Call the function when the component mounts
-    }, []);
+            checkUserData(); // Call the function when the screen comes into focus
+            return () => {
+                // Clean-up function (optional)
+            };
+        }, [])
+    );
+
 
 
     return (
