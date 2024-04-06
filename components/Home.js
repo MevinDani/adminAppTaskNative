@@ -18,6 +18,8 @@ import TaskStatisticsChart from './TaskStatisticsChart';
 import ProjectList from './ProjectList';
 import NewProject from './NewProject';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastManager, { Toast } from 'toastify-react-native'
 
 
 const Home = () => {
@@ -32,17 +34,48 @@ const Home = () => {
 
     const [showNewProject, setShowNewProject] = useState(false)
 
-    useEffect(() => {
-        const fetchAllTasks = async () => {
-            try {
-                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainList/CPAYS/all/-/-/-/-/-/2024-01-10/2024-03-28/-`)
-                if (response.status === 200) {
-                    setAllTaskData(response.data)
-                }
-            } catch (error) {
-                console.log('allTaskApierr', error)
-            }
+    const [userData, setUserData] = useState(null)
+
+    const [empId, setEmpId] = useState('')
+
+
+    const showUserDataToast = (userData) => {
+        if (userData && userData.empid) {
+            Toast.success(`Welcome ${userData.empid}`);
         }
+    }
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userDataJson = await AsyncStorage.getItem('userData');
+                const userData = JSON.parse(userDataJson);
+                // Now you have userData, you can use it here
+                setUserData(userData)
+                setEmpId(userData.empid)
+                console.log(userData, 'userData')
+                showUserDataToast(userData)
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
+
+
+    const fetchAllTasks = async () => {
+        try {
+            const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainList/CPAYS/all/-/-/-/-/-/2024-01-10/2024-03-28/-`)
+            if (response.status === 200) {
+                setAllTaskData(response.data)
+            }
+        } catch (error) {
+            console.log('allTaskApierr', error)
+        }
+    }
+
+    useEffect(() => {
         fetchAllTasks()
     }, [])
 
@@ -86,6 +119,7 @@ const Home = () => {
     // console.log('allTaskData', allTaskData)
     return (
         <SafeAreaView style={styles.HomeContainer}>
+            <ToastManager />
             <View style={{
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -242,7 +276,7 @@ const Home = () => {
                             allTaskData && allTaskData?.map((task, index) => (
                                 <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
                                     <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
-                                        <Image style={{ width: 25, height: 25, marginRight: 4 }} source={getImageForStatus(task.latest_status)}></Image>
+                                        <Image style={{ width: 25, height: 25, marginRight: 12 }} source={getImageForStatus(task.latest_status)}></Image>
                                         <Text>{task.task_name}</Text>
                                     </Text>
                                     <Text style={styles.dataCell}>{task.latest_status}</Text>
@@ -268,7 +302,7 @@ const Home = () => {
 
             {
                 showNewTask &&
-                <AddNewTask onClose={() => setShowNewTask(false)} />
+                <AddNewTask onClose={() => setShowNewTask(false)} fetchAllTasks={fetchAllTasks} />
             }
 
             {
@@ -325,7 +359,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F3F3F3',
         padding: 10,
-        textAlign: 'center',
+        // textAlign: 'center',
         width: 120,
         borderTopWidth: 1,
         borderLeftWidth: 1,

@@ -57,7 +57,7 @@ const Header = () => {
             await AsyncStorage.removeItem('userData');
 
             // Navigate to the login page
-            navigation.navigate('LoginPage');
+            navigation.navigate('MachineValidation');
             setshowLogoutPoP(false)
         } catch (error) {
             console.error("Error logging out:", error);
@@ -76,7 +76,7 @@ const Header = () => {
 
                 {/* HeaderNav */}
                 <View style={styles.THHeaderNav}>
-                    <TouchableOpacity onPress={() => navigation.navigate('EmployeeHome')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                         <View>
                             <Image source={require('../images/xpertLogo.png')} style={{ height: 40, width: 120 }}></Image>
                         </View>
@@ -96,7 +96,7 @@ const Header = () => {
                     </TouchableOpacity>
 
                     <View style={styles.sidePanelRight}>
-                        <TouchableOpacity onPress={() => navigation.navigate('EmployeeHome')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                             <View style={{
                                 padding: 8,
                                 margin: 4,
@@ -106,7 +106,7 @@ const Header = () => {
                                 }}>Home</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('CompletedTask')}>
+                        {/* <TouchableOpacity onPress={() => navigation.navigate('CompletedTask')}>
                             <View style={{
                                 padding: 8,
                                 margin: 4,
@@ -115,7 +115,7 @@ const Header = () => {
                                     fontWeight: 'bold'
                                 }}>My completed Tasks</Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity style={{
                             padding: 8,
                             margin: 4,

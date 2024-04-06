@@ -13,7 +13,7 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 
-const AddNewTask = ({ onClose }) => {
+const AddNewTask = ({ onClose, fetchAllTasks }) => {
     // const [taskComesUnder, setTaskComesUnder] = useState('Common Job')
     // const [taskType, setTaskType] = useState('Inhouse')
     // const [includeTravel, setIncludeTravel] = useState('N')
@@ -217,25 +217,25 @@ const AddNewTask = ({ onClose }) => {
     }
 
 
-    // useEffect(() => {
-    //     const fetchUserData = async () => {
-    //         try {
-    //             const userDataJson = await AsyncStorage.getItem('userData');
-    //             const userData = JSON.parse(userDataJson);
-    //             // Now you have userData, you can use it here
-    //             setUserData(userData)
-    //             setEmpId(userData.empid)
-    //             console.log(userData, 'userData')
-    //             showUserDataToast(userData)
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userDataJson = await AsyncStorage.getItem('userData');
+                const userData = JSON.parse(userDataJson);
+                // Now you have userData, you can use it here
+                setUserData(userData)
+                setEmpId(userData.empid)
+                console.log(userData, 'userData')
+                // showUserDataToast(userData)
 
-    //         } catch (error) {
-    //             console.error('Error fetching user data:', error);
-    //         }
-    //     };
-    //     fetchUserData();
-    // }, []);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
-    // console.log(userData, 'userData')
+    console.log(userData, 'userData')
 
     const showTaskSaveToast = () => {
         Toast.success('Task Added Successfully')
@@ -403,7 +403,8 @@ const AddNewTask = ({ onClose }) => {
                 // Assuming a successful response has status code 200
                 if (response.status === 200) {
                     showTaskSaveToast()
-                    fetchDataNew()
+                    fetchAllTasks()
+                    // fetchDataNew()
                     // Task saved successfully, handle any further actions here
                     console.log('Task saved successfully');
                     console.log(response.data)
@@ -415,6 +416,7 @@ const AddNewTask = ({ onClose }) => {
                     setModalVisible(false)
                 }
                 setModalVisible(false)
+                onClose()
             } catch (error) {
                 // Handle network errors or other issues
                 console.error('Error while saving task:', error);

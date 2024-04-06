@@ -59,6 +59,10 @@ const TaskDetails = () => {
 
     const [viewImgPop, setImagePoP] = useState(false)
 
+    const [timeDifference, setTimeDifference] = useState([])
+
+    const [finalTaskHistory, setFinalTaskHistory] = useState(null)
+
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().replace("T", " ").replace("Z", "");
 
@@ -108,7 +112,13 @@ const TaskDetails = () => {
             try {
                 const response = await axios.get(`https://cubixweberp.com:156/api/CRMTAskHistoryList/cpays/all/-/${task_id}/`);
                 const data = response.data;
-                setTaskHistory(data)
+
+                if (data.length > 0) {
+                    setTaskHistory(data)
+                } else {
+
+                    console.log('no data in api')
+                }
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -246,6 +256,15 @@ const TaskDetails = () => {
                 return completed
             case 'BEYOND THE SCOPE':
                 return beyondScope
+            case '':
+                return TaskOpen
+            case '0':
+                return TaskOpen
+            case 0:
+                return TaskOpen
+            // Add cases for other statuses as needed
+            default:
+                return TaskOpen;
             // Add cases for other statuses as needed
             // default:
             //     return require('../images/default_image.png');
@@ -330,17 +349,17 @@ const TaskDetails = () => {
         }
     };
 
-    const getImage = async () => {
+    const getImage = async (id) => {
         setImagePoP(true)
-        if (taskHistory) {
-            try {
-                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTAskImageList/cpays/${taskHistory[0].id}`)
-                console.log(response.data)
-                setImageApiData(response.data)
-            } catch (error) {
-                console.log('getImageError', error)
-            }
+        try {
+            const response = await axios.get(`https://cubixweberp.com:156/api/CRMTAskImageList/cpays/${id}`)
+            console.log(response.data)
+            setImageApiData(response.data)
+        } catch (error) {
+            console.log('getImageError', error)
         }
+        // if (taskHistory) {
+        // }
     }
 
     const imgBaseUrl = "https://cubixweberp.com/cubix_taskify/dummy/";
@@ -383,6 +402,40 @@ const TaskDetails = () => {
 
     }, [taskData]);
 
+    useEffect(() => {
+        if (taskHistory) {
+            // Reverse the taskHistory array
+            const reversedTaskHistory = taskHistory.slice().reverse();
+
+            // Map the reversed array to add time difference
+            const updatedTaskHistory = reversedTaskHistory.map((item, index, arr) => {
+                if (index === 0) {
+                    // For the last item (after reversing), set the time difference as 0
+                    return { ...item, timeDifference: 0 };
+                } else {
+                    // Calculate the time difference between the current item and the next item (after reversing)
+                    const currentCreatedTime = new Date(item.created_on).getTime();
+                    const nextCreatedTime = new Date(arr[index - 1].created_on).getTime();
+                    const timeDifferenceMs = nextCreatedTime - currentCreatedTime;
+                    const timeDifferenceHrs = timeDifferenceMs / (1000 * 60 * 60); // Convert milliseconds to hours
+                    return { ...item, timeDifference: timeDifferenceHrs };
+                }
+            });
+
+            const finalTaskHistory = updatedTaskHistory.slice().reverse();
+
+            setFinalTaskHistory(finalTaskHistory)
+
+            // Now you can use updatedTaskHistory for rendering
+
+
+            console.log('finalTaskHistory', finalTaskHistory)
+        }
+    }, [taskHistory])
+
+
+
+    console.log('timeDifference', timeDifference)
 
     console.log('userAttendanceFromDet', userAttendance)
 
@@ -574,11 +627,11 @@ const TaskDetails = () => {
                         </View>
                     </View>
 
-                    {
-                        userAttendance && userAttendance[0].type === 'IN' &&
+                    {/* {
+                        userAttendance && userAttendance[0].type === 'IN' && */}
 
-                        <>
-                            {/* <View style={{
+                    <>
+                        {/* <View style={{
                                 width: '98%',
                                 padding: 12,
                                 margin: 8,
@@ -684,7 +737,7 @@ const TaskDetails = () => {
 
                             </View> */}
 
-                            {/* <View style={{
+                        {/* <View style={{
                                 width: '98%',
                                 padding: 12,
                                 margin: 8,
@@ -773,10 +826,10 @@ const TaskDetails = () => {
                                 </View>
 
                             </View> */}
-                        </>
-                    }
+                    </>
+                    {/* } */}
 
-                    {
+                    {/* {
                         userAttendance && userAttendance[0].type === 'OUT' &&
 
                         <View style={{
@@ -787,7 +840,7 @@ const TaskDetails = () => {
                                 fontWeight: 'bold'
                             }}>You need to check in to update tasks</Text>
                         </View>
-                    }
+                    } */}
 
 
                     <View style={{
@@ -804,16 +857,16 @@ const TaskDetails = () => {
                             }}>Task timeline</Text>
                         </View>
                         {
-                            taskHistory?.length == 0 &&
+                            taskHistory?.length == 0 || taskHistory === null &&
                             <View>
                                 <Text style={{
-                                    color: 'black'
+                                    color: 'red', fontWeight: 'bold'
                                 }}>no activity to show</Text>
                             </View>
                         }
 
                         {
-                            taskHistory?.length > 0 &&
+                            finalTaskHistory?.length > 0 &&
 
                             <View style={{
                                 width: '100%',
@@ -825,84 +878,200 @@ const TaskDetails = () => {
                                 position: 'relative'
 
                             }}>
-                                {
-                                    taskHistory.map((history, index) => (
-                                        <View key={index} style={{
-                                            // flexDirection: 'row',
-                                            width: '60%',
-                                            alignItems: 'left',
-                                            margin: 12
-                                            // position: 'relative'
 
-                                        }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                width: 45,
-                                                height: 45,
-                                                borderRadius: 50,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                position: 'absolute',
-                                                zIndex: 2,
-                                                left: -42,
-                                                top: 20
-                                            }}>
-                                                <Image style={history.task_status === 'COMPLETED' ? { width: 40, height: 40 } : null} source={getImageForStatus(history.task_status)}></Image>
-                                            </View>
-                                            <View style={{
-                                                marginLeft: 10,
-                                                // borderLeftWidth: 2, borderLeftColor: '#ff1010'
+                                {
+                                    finalTaskHistory.map((history, index) => {
+                                        const scheduledOn = new Date(history.task_scheduledon);
+                                        const createdOn = new Date(history.created_on);
+                                        const timeDifferenceMs = createdOn - scheduledOn;
+                                        const hoursDifference = timeDifferenceMs / (1000 * 60 * 60); // milliseconds to hours
+
+                                        let timeDifferenceMessage = '';
+                                        let clockImage = null;
+
+                                        if (history.task_stage === 'TASK_START') {
+                                            if (hoursDifference < 0) {
+                                                timeDifferenceMessage = `delayed by ${Math.abs(hoursDifference).toFixed(2)} hrs`;
+                                                clockImage = require('../images/clockDelay.png');
+                                            } else if (hoursDifference > 0) {
+                                                timeDifferenceMessage = `earlier by ${hoursDifference.toFixed(2)} hrs`;
+                                                clockImage = require('../images/clockEarly.png');
+                                            }
+                                        }
+
+                                        return (
+                                            <View key={index} style={{
+                                                width: '60%',
+                                                alignItems: 'left',
+                                                margin: 12
                                             }}>
                                                 <View style={{
                                                     backgroundColor: 'white',
-                                                    padding: 8,
-                                                    margin: 4,
-                                                    marginLeft: 25,
+                                                    width: 45,
+                                                    height: 45,
+                                                    borderRadius: 50,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    position: 'absolute',
+                                                    zIndex: 2,
+                                                    left: -42,
+                                                    top: 20
                                                 }}>
-                                                    <Text style={{
-                                                        color: 'black'
-                                                    }}>{formatDate(history.created_on)}</Text>
+                                                    <Image style={history.task_status === 'COMPLETED' ? { width: 40, height: 40 } : null} source={getImageForStatus(history.task_stage)}></Image>
+                                                    {/* time differnce  */}
                                                 </View>
-
                                                 <View style={{
-                                                    backgroundColor: '#F0F8FF',
-                                                    padding: 8,
-                                                    margin: 4,
-                                                    marginLeft: 25,
+                                                    backgroundColor: 'white',
+                                                    // width: 45,
+                                                    // height: 45,
+                                                    // borderRadius: 50,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    position: 'absolute',
+                                                    zIndex: 2,
+                                                    left: -42,
+                                                    top: 65,
+                                                    padding: 4
                                                 }}>
-                                                    <Text style={{ color: 'black', fontSize: 16 }}>{history.task_status}</Text>
-                                                    <Text style={{ color: 'black', marginTop: 4 }}>{history.task_status_description}</Text>
-
-                                                    {
-                                                        history.latitude !== '' && history.longitude !== '' &&
-                                                        <TouchableOpacity>
-                                                            <View style={{
-                                                                flexDirection: "row",
-                                                                padding: 8,
-                                                                backgroundColor: 'white',
-                                                                justifyContent: 'space-evenly',
-                                                                alignItems: 'center'
-                                                            }}>
-                                                                <Image style={{ width: 30, height: 30 }} source={require('../images/globeLoc.png')}></Image>
-                                                                <Text style={{ color: 'black' }}>View Location</Text>
+                                                    <Text>+ {Math.abs(history.timeDifference).toFixed(2)} hrs</Text>
+                                                </View>
+                                                <View style={{
+                                                    marginLeft: 10,
+                                                }}>
+                                                    <View style={{
+                                                        backgroundColor: 'white',
+                                                        padding: 8,
+                                                        margin: 4,
+                                                        marginLeft: 25,
+                                                    }}>
+                                                        <Text style={{ color: 'black' }}>{formatDate(history.created_on)}</Text>
+                                                        {history.task_stage === 'TASK_START' &&
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, padding: 4 }}>
+                                                                <Image style={{ width: 25, height: 25 }} source={clockImage}></Image>
+                                                                <Text style={{ color: 'black' }}>{timeDifferenceMessage}</Text>
                                                             </View>
+                                                        }
+                                                    </View>
+
+                                                    <View style={{
+                                                        backgroundColor: '#F0F8FF',
+                                                        padding: 8,
+                                                        margin: 4,
+                                                        marginLeft: 25,
+                                                    }}>
+                                                        <Text style={{ color: 'black', fontSize: 16 }}>{history.task_stage}</Text>
+                                                        <Text style={{ color: 'black', marginTop: 4 }}>{history.task_status_description}</Text>
+                                                        {
+                                                            history.latitude !== '' && history.longitude !== '' &&
+                                                            <TouchableOpacity>
+                                                                <View style={{
+                                                                    flexDirection: "row",
+                                                                    padding: 8,
+                                                                    backgroundColor: 'white',
+                                                                    justifyContent: 'space-evenly',
+                                                                    alignItems: 'center'
+                                                                }}>
+                                                                    <Image style={{ width: 30, height: 30 }} source={require('../images/globeLoc.png')}></Image>
+                                                                    <Text style={{ color: 'black' }}>View Location</Text>
+                                                                </View>
+                                                            </TouchableOpacity>
+                                                        }
+                                                    </View>
+
+                                                    {/* added code */}
+                                                    {/* Check if the property exists and its value is 'Y' */}
+                                                    {history.hasOwnProperty('name_of_file_uploaded') && history.name_of_file_uploaded === 'Y' &&
+                                                        <TouchableOpacity onPress={() => getImage(history.id)} style={{
+                                                            position: 'absolute',
+                                                            right: -100, // Adjust this value as needed
+                                                            top: 3, // Adjust this value as needed
+                                                            backgroundColor: 'black', // Example background color
+                                                            padding: 8,
+                                                            borderRadius: 4
+                                                        }}>
+                                                            {/* Content for the additional view */}
+                                                            <Text style={{ color: 'white' }}>View Image</Text>
                                                         </TouchableOpacity>
                                                     }
 
+                                                    <View></View>
                                                 </View>
                                             </View>
-                                        </View>
-                                    ))
+                                        );
+                                    })
                                 }
+
 
                             </View>
                         }
+
                     </View>
 
 
 
                 </View>
             </ScrollView>
+
+            {/* imgPop */}
+            {
+                viewImgPop &&
+
+                <View style={styles.ViewImgModalWrapper}>
+                    <View style={styles.ViewImgModal}>
+
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 8
+                        }}>
+                            <Text style={{
+                                padding: 8,
+                                margin: 4,
+                                color: 'black',
+                                fontSize: 18,
+                                fontWeight: 'bold'
+                            }}>File Details</Text>
+
+                            <TouchableOpacity onPress={() => setImagePoP(false)}>
+                                <Image style={{ width: 30, height: 30 }} source={require('../images/closeIcon.png')}></Image>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView vertical={true}>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                                marginTop: 12,
+                                marginBottom: 12
+                            }}>
+
+                                {
+                                    modifiedImgData && modifiedImgData.map((item, index) => (
+                                        <View style={{
+                                            width: '40%',
+                                            margin: 4,
+                                            justifyContent: "center",
+                                            alignItems: 'center',
+
+                                            // borderColor: 'red',
+                                            // borderWidth: 2
+                                        }} key={index}>
+                                            <Image source={{ uri: item.Imagepath }} style={{ width: '100%', height: 200, }}></Image>
+                                            <Text>{item.Description ? item.Description : ""}</Text>
+                                        </View>
+                                    ))
+                                }
+
+                            </View>
+                        </ScrollView>
+
+
+                    </View>
+                </View>
+            }
 
         </SafeAreaView >
     )
