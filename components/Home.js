@@ -120,185 +120,196 @@ const Home = () => {
     return (
         <SafeAreaView style={styles.HomeContainer}>
             <ToastManager />
-            <View style={{
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
 
-                {/* header */}
-                <Header />
-                {/* header */}
+            <ScrollView vertical={true}>
 
-                {/* projectTask */}
                 <View style={{
-                    flexDirection: "row",
                     justifyContent: 'center',
-                    marginVertical: 4,
-                    backgroundColor: '#E6E6FA',
-                    width: '100%',
-                    paddingHorizontal: 8,
-                    paddingVertical: 12
+                    alignItems: 'center'
                 }}>
-                    <TouchableOpacity style={styles.projectTask} onPress={() => setShowNewTask(!showNewTask)}>
-                        <View style={{
-                            justifyContent: 'center', alignItems: 'center'
-                        }}>
-                            <Image style={styles.projectImg} source={require('../images/addNewTaskIcon.png')}></Image>
-                            <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>New Task</Text>
-                        </View>
-                    </TouchableOpacity >
-                    <TouchableOpacity style={styles.projectTask} onPress={() => setShowNewProject(!showNewProject)}>
-                        <View style={{
-                            justifyContent: 'center', alignItems: 'center'
-                        }}>
-                            <Image style={styles.projectImg} source={require('../images/ic_customers_menu.png')}></Image>
-                            <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>New Project</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.projectTask} onPress={() => setShowProjectList(!showProjectList)}>
-                        <View style={{
-                            justifyContent: 'center', alignItems: 'center'
-                        }}>
-                            <Image style={styles.projectImg} source={require('../images/ic_customers_menu.png')}></Image>
-                            <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>Project List</Text>
-                        </View>
-                    </TouchableOpacity>
 
-                </View>
-                {/* projectTask */}
+                    {/* header */}
+                    <Header />
+                    {/* header */}
 
-                {/* stages */}
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: 'center',
-                    marginVertical: 4,
-                    backgroundColor: '#E6E6FA',
-                    width: '100%',
-                    paddingHorizontal: 8,
-                    paddingVertical: 12
-                }}>
-                    <ScrollView horizontal={true}>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/work_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ALL</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/ticket_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED OPEN</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT PENDING</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT EXCEEDED</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED ON HOLD</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            width: 100,
-                            height: 100,
-                            margin: 8,
-                        }}>
-                            <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
-                                <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ESCALATED</Text>
-                            </ImageBackground>
-                        </TouchableOpacity>
-
-
-                    </ScrollView>
-                </View>
-                {/* stages */}
-
-
-                {/* allTaskTable */}
-                <ScrollView vertical={true} style={{
-                    marginTop: 8,
-                    backgroundColor: 'white'
-                }}>
+                    {/* projectTask */}
                     <View style={{
-                        flexDirection: 'row',
+                        flexDirection: "row",
+                        justifyContent: 'center',
+                        marginVertical: 4,
+                        backgroundColor: '#E6E6FA',
                         width: '100%',
-                        justifyContent: 'space-between',
-                        alignItems: "center",
-                        padding: 8
+                        paddingHorizontal: 8,
+                        paddingVertical: 12
                     }}>
-                        <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>All Task</Text>
-                        <TouchableOpacity style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: 8,
-                            backgroundColor: '#F8F9FA'
-                        }}>
-                            <Image style={{ height: 30, width: 30 }} source={require('../images/filterIcon.png')}></Image>
-                            <Text style={{ color: 'black' }}>Filter</Text>
+                        <TouchableOpacity style={styles.projectTask} onPress={() => setShowNewTask(!showNewTask)}>
+                            <View style={{
+                                justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <Image style={styles.projectImg} source={require('../images/addNewTaskIcon.png')}></Image>
+                                <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>New Task</Text>
+                            </View>
+                        </TouchableOpacity >
+                        <TouchableOpacity style={styles.projectTask} onPress={() => setShowNewProject(!showNewProject)}>
+                            <View style={{
+                                justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <Image style={styles.projectImg} source={require('../images/ic_customers_menu.png')}></Image>
+                                <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>New Project</Text>
+                            </View>
                         </TouchableOpacity>
-                    </View>
+                        <TouchableOpacity style={styles.projectTask} onPress={() => setShowProjectList(!showProjectList)}>
+                            <View style={{
+                                justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <Image style={styles.projectImg} source={require('../images/ic_customers_menu.png')}></Image>
+                                <Text style={{ color: 'black', marginTop: 8, fontWeight: 'bold' }}>Project List</Text>
+                            </View>
+                        </TouchableOpacity>
 
-                    <View style={styles.TableContainer}>
-                        {/* Table Header */}
-                        <View style={styles.tableRow}>
-                            <Text style={styles.headerCell}>Name</Text>
-                            <Text style={styles.headerCell}>Status & Stage</Text>
-                            <Text style={styles.headerCell}>Created on</Text>
+                    </View>
+                    {/* projectTask */}
+
+                    {/* stages */}
+                    <View style={{
+                        flexDirection: "row",
+                        justifyContent: 'center',
+                        marginVertical: 4,
+                        backgroundColor: '#E6E6FA',
+                        width: '100%',
+                        paddingHorizontal: 8,
+                        paddingVertical: 12
+                    }}>
+                        <ScrollView horizontal={true}>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/work_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ALL</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/ticket_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED OPEN</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT PENDING</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT EXCEEDED</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED ON HOLD</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 100,
+                                margin: 8,
+                            }}>
+                                <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
+                                    <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ESCALATED</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+
+
+                        </ScrollView>
+                    </View>
+                    {/* stages */}
+
+
+                    {/* allTaskTable */}
+                    <View style={{
+                        // marginTop: 8,
+                        backgroundColor: 'white',
+                        marginBottom: 12, width: '100%'
+                    }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            alignItems: "center",
+                            padding: 8
+                        }}>
+                            <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>All Task</Text>
+                            <TouchableOpacity style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 8,
+                                backgroundColor: '#F8F9FA'
+                            }}>
+                                <Image style={{ height: 30, width: 30 }} source={require('../images/filterIcon.png')}></Image>
+                                <Text style={{ color: 'black' }}>Filter</Text>
+                            </TouchableOpacity>
                         </View>
 
-                        {
-                            allTaskData && allTaskData?.map((task, index) => (
-                                <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
-                                    <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
-                                        <Image style={{ width: 25, height: 25, marginRight: 12 }} source={getImageForStatus(task.latest_status)}></Image>
-                                        <Text>{task.task_name}</Text>
-                                    </Text>
-                                    <Text style={styles.dataCell}>{task.latest_status}</Text>
-                                    <Text style={styles.dataCell}>{dayjs(task.created_on).format('DD/MM/YYYY')}</Text>
-                                </TouchableOpacity>
-                            ))
-                        }
+                        <View style={styles.TableContainer}>
+                            {/* Table Header */}
+                            <View style={styles.tableRow}>
+                                <Text style={styles.headerCell}>Name</Text>
+                                <Text style={styles.headerCell}>Status & Stage</Text>
+                                <Text style={styles.headerCell}>Created on</Text>
+                            </View>
+
+                            <ScrollView nestedScrollEnabled={true}>
+
+                                {
+                                    allTaskData && allTaskData?.map((task, index) => (
+                                        <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
+                                            <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
+                                                <Image style={{ width: 25, height: 25, marginRight: 12 }} source={getImageForStatus(task.latest_status)}></Image>
+                                                <Text>{task.task_name}</Text>
+                                            </Text>
+                                            <Text style={styles.dataCell}>{task.latest_status}</Text>
+                                            <Text style={styles.dataCell}>{dayjs(task.created_on).format('DD/MM/YYYY')}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                }
+
+                            </ScrollView>
+
+                        </View>
 
                     </View>
-                </ScrollView>
 
-                {
-                    allTaskData === null &&
-                    <ActivityIndicator color='blue' size='large'></ActivityIndicator>
-                }
-                {/* allTaskTable */}
+                    {/* statisticChart */}
+                    <TaskStatisticsChart />
+                    {/* statisticChart */}
+                    {
+                        allTaskData === null &&
+                        <ActivityIndicator color='blue' size='large'></ActivityIndicator>
+                    }
+                    {/* allTaskTable */}
 
-                {/* statisticChart */}
-                {/* <TaskStatisticsChart /> */}
-                {/* statisticChart */}
 
-            </View >
+                </View >
+
+            </ScrollView>
 
             {
                 showNewTask &&
@@ -338,7 +349,8 @@ const styles = StyleSheet.create({
     TableContainer: {
         width: "100%",
         padding: 10,
-        marginTop: 2
+        marginTop: 2,
+        maxHeight: 400
     },
     tableRow: {
         flexDirection: 'row',

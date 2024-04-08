@@ -10,5 +10,7 @@ import MainApp from './MainApp';
 import ProjectList from './components/ProjectList';
 import NewProject from './components/NewProject';
 import TaskDetails from './components/TaskDetails';
+import TaskStatisticsChart from './components/TaskStatisticsChart';
+import TaskStatisticsKit from './components/TaskStatisticsKit';
 
-AppRegistry.registerComponent(appName, () => MainApp);
+AppRegistry.registerComponent(appName, () => TaskStatisticsChart);
