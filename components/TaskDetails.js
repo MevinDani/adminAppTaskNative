@@ -614,7 +614,7 @@ const TaskDetails = () => {
                             shadowColor: "black",
                             shadowOffset: {
                                 width: 0,
-                                height: 1,
+                                height: 2,
                             },
                             shadowOpacity: 0.20,
                             shadowRadius: 1.41,

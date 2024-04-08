@@ -279,6 +279,11 @@ const Home = () => {
                             <ScrollView nestedScrollEnabled={true}>
 
                                 {
+                                    allTaskData === null &&
+                                    <ActivityIndicator color='blue' size='large'></ActivityIndicator>
+                                }
+
+                                {
                                     allTaskData && allTaskData?.map((task, index) => (
                                         <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
                                             <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
@@ -296,15 +301,12 @@ const Home = () => {
                         </View>
 
                     </View>
+                    {/* allTaskTable */}
 
                     {/* statisticChart */}
                     <TaskStatisticsChart />
                     {/* statisticChart */}
-                    {
-                        allTaskData === null &&
-                        <ActivityIndicator color='blue' size='large'></ActivityIndicator>
-                    }
-                    {/* allTaskTable */}
+
 
 
                 </View >
