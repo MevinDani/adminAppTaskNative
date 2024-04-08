@@ -12,5 +12,6 @@ import NewProject from './components/NewProject';
 import TaskDetails from './components/TaskDetails';
 import TaskStatisticsChart from './components/TaskStatisticsChart';
 import TaskStatisticsKit from './components/TaskStatisticsKit';
+import StackedBarChartWithOnPressExample from './components/Test';
 
-AppRegistry.registerComponent(appName, () => TaskStatisticsChart);
+AppRegistry.registerComponent(appName, () => MainApp);

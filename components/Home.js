@@ -246,7 +246,7 @@ const Home = () => {
                     <View style={{
                         // marginTop: 8,
                         backgroundColor: 'white',
-                        marginBottom: 12, width: '100%'
+                        marginBottom: 24, width: '100%'
                     }}>
                         <View style={{
                             flexDirection: 'row',
@@ -331,7 +331,8 @@ const Home = () => {
 
 const styles = StyleSheet.create({
     HomeContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#E6E6FA'
     },
     projectTask: {
         justifyContent: 'center',
