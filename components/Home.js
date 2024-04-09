@@ -38,12 +38,40 @@ const Home = () => {
 
     const [empId, setEmpId] = useState('')
 
+    const [showActivity, setShowActivity] = useState(false)
+
+    const [selectedStage, setSelectedStage] = useState('ALL')
+
 
     const showUserDataToast = (userData) => {
         if (userData && userData.empid) {
             Toast.success(`Welcome ${userData.empid}`);
         }
     }
+
+    const setStage = (stage) => {
+        setSelectedStage(stage)
+    }
+
+    useEffect(() => {
+        const fetchTasksByStage = async () => {
+            try {
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainList/CPAYS/all/-/-/-/-/-/2024-01-10/2024-03-28/-`);
+                const filteredTasks = response.data.filter(task => task.latest_status === selectedStage);
+                // Do something with the filtered tasks, like set them to state
+                setAllTaskData(filteredTasks);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        if (selectedStage === 'ALL') {
+            fetchAllTasks();
+        } else {
+            fetchTasksByStage();
+        }
+    }, [selectedStage]);
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -116,7 +144,7 @@ const Home = () => {
         });
     };
 
-    // console.log('allTaskData', allTaskData)
+    console.log('allTaskData', allTaskData)
     return (
         <SafeAreaView style={styles.HomeContainer}>
             <ToastManager />
@@ -181,58 +209,142 @@ const Home = () => {
                         paddingVertical: 12
                     }}>
                         <ScrollView horizontal={true}>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ALL')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/work_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ALL</Text>
+
+                                    {
+                                        selectedStage === 'ALL' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
+
                                 </ImageBackground>
+
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ACCEPTED_OPEN')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/ticket_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED OPEN</Text>
+
+                                    {
+                                        selectedStage === 'ACCEPTED_OPEN' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
                                 </ImageBackground>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ACCEPT_PENDING')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT PENDING</Text>
+
+                                    {
+                                        selectedStage === 'ACCEPT_PENDING' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
+
                                 </ImageBackground>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ACCEPT_EXCEEDED')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT EXCEEDED</Text>
+
+                                    {
+                                        selectedStage === 'ACCEPT_EXCEEDED' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
+
                                 </ImageBackground>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ACCEPTED_ON_HOLD')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED ON HOLD</Text>
+
+                                    {
+                                        selectedStage === 'ACCEPTED_ON_HOLD' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
+
                                 </ImageBackground>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setStage('ESCALATED')} style={{
                                 width: 100,
                                 height: 100,
                                 margin: 8,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ESCALATED</Text>
+
+                                    {
+                                        selectedStage === 'ESCALATED' &&
+                                        <View style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            bottom: 5
+                                        }}>
+                                            <Image style={{
+                                                width: 25, height: 25
+                                            }} source={require('../images/ic_check_scanned_button.png')}></Image>
+                                        </View>
+                                    }
+
                                 </ImageBackground>
                             </TouchableOpacity>
 
@@ -281,6 +393,18 @@ const Home = () => {
                                 {
                                     allTaskData === null &&
                                     <ActivityIndicator color='blue' size='large'></ActivityIndicator>
+                                }
+
+                                {
+                                    allTaskData && allTaskData.length === 0 &&
+
+                                    <View style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        padding: 12
+                                    }}>
+                                        <Text style={{ color: 'red', fontWeight: 16, fontWeight: 'bold' }}>No Data Available</Text>
+                                    </View>
                                 }
 
                                 {
