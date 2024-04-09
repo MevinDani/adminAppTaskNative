@@ -63,6 +63,11 @@ const TaskDetails = () => {
 
     const [finalTaskHistory, setFinalTaskHistory] = useState(null)
 
+    const [clickedLong, selectClickedLong] = useState('')
+    const [clickedLat, selectClickedLat] = useState('')
+
+    const [showLocationPop, setShowLocationPop] = useState(false)
+
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().replace("T", " ").replace("Z", "");
 
@@ -432,6 +437,11 @@ const TaskDetails = () => {
             console.log('finalTaskHistory', finalTaskHistory)
         }
     }, [taskHistory])
+
+    const showLocation = async (lat, long) => {
+        setShowLocationPop(true)
+        console.log(lat, long)
+    }
 
 
 
@@ -963,7 +973,7 @@ const TaskDetails = () => {
                                                         <Text style={{ color: 'black', marginTop: 4 }}>{history.task_status_description}</Text>
                                                         {
                                                             history.latitude !== '' && history.longitude !== '' &&
-                                                            <TouchableOpacity>
+                                                            <TouchableOpacity onPress={() => showLocation(history.latitude, history.longitude)}>
                                                                 <View style={{
                                                                     flexDirection: "row",
                                                                     padding: 8,
@@ -1064,6 +1074,51 @@ const TaskDetails = () => {
                                         </View>
                                     ))
                                 }
+
+                            </View>
+                        </ScrollView>
+
+
+                    </View>
+                </View>
+            }
+
+            {/* locationPop */}
+            {
+                showLocationPop &&
+
+                <View style={styles.ViewImgModalWrapper}>
+                    <View style={styles.ViewImgModal}>
+
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 8
+                        }}>
+                            <Text style={{
+                                padding: 8,
+                                margin: 4,
+                                color: 'black',
+                                fontSize: 18,
+                                fontWeight: 'bold'
+                            }}>Location Details</Text>
+
+                            <TouchableOpacity onPress={() => setShowLocationPop(false)}>
+                                <Image style={{ width: 30, height: 30 }} source={require('../images/closeIcon.png')}></Image>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView vertical={true}>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                                marginTop: 12,
+                                marginBottom: 12
+                            }}>
+
 
                             </View>
                         </ScrollView>

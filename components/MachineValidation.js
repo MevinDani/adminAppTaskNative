@@ -99,7 +99,7 @@ const MachineValidation = () => {
                 } else {
                     setLoginError("Invalid Private Key");
                     setPrivateKey('')
-                    navigation.navigate('LoginPage');
+                    // navigation.navigate('LoginPage');
 
                     // setLoginClick(false);
                 }
@@ -111,6 +111,24 @@ const MachineValidation = () => {
         }
     }
 
+    const validateCompany = async (company) => {
+        console.log('validateCmp')
+        if (company.cmpcode && company.publick && company.privatek) {
+            const result = await fetch(`https://cubixweberp.com:164/CheckStatus?cmpcode=${company.cmpcode}&publick=${company.publick}&privatek=${company.privatek}`)
+            const data = await result.json()
+            // console.log(data)
+            // setDeviceValidation(data[0].Column1)
+            if (data[0].Column1 === 'VALIDATED') {
+                // localStorage.setItem("selectedCompany", JSON.stringify(company));
+                navigation.navigate('LoginPage');
+            }
+        } else {
+            setLoginError('INVALID')
+            // navigate('/');
+            console.log("not validated")
+        }
+    };
+
     useFocusEffect(
         React.useCallback(() => {
             const checkUserData = async () => {
@@ -119,11 +137,17 @@ const MachineValidation = () => {
                     if (storedUserDataArrayJson) {
                         const storedUserDataArray = JSON.parse(storedUserDataArrayJson);
                         if (storedUserDataArray.length > 0) {
+                            const company = storedUserDataArray[0]
+                            validateCompany(company)
                             // Redirect to LoginPage if userDataArray exists and has values
                             navigation.navigate('LoginPage');
                         }
                     } else {
                         navigation.navigate('LoginPage');
+
+                        setLoginError('INVALID')
+                        // navigate('/');
+                        console.log("not validated")
                     }
                 } catch (error) {
                     console.error('Error checking user data:', error);

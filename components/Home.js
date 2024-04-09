@@ -246,7 +246,7 @@ const Home = () => {
                     <View style={{
                         // marginTop: 8,
                         backgroundColor: 'white',
-                        marginBottom: 24, width: '100%'
+                        marginBottom: 24, width: '96%'
                     }}>
                         <View style={{
                             flexDirection: 'row',
