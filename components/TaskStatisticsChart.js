@@ -176,7 +176,13 @@ const TaskStatisticsChart = () => {
     // console.log('chartData', chartData)
 
     return (
-        <View style={{ height: 500, padding: 12, backgroundColor: 'white', width: '94%', marginBottom: 14 }}>
+        <View style={{
+            height: 500, padding: 12, backgroundColor: 'white', width: '94%', marginBottom: 14, shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3,
+            elevation: 5,
+        }}>
             <View>
                 <Text style={{ color: "black", fontSize: 18, fontWeight: 'bold' }}>Task Statistics</Text>
             </View>

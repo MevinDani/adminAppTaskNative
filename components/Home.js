@@ -602,7 +602,13 @@ const Home = () => {
                     <View style={{
                         // marginTop: 8,
                         backgroundColor: 'white',
-                        marginBottom: 24, width: '96%'
+                        marginBottom: 24, width: '96%',
+
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3,
+                        elevation: 5,
                     }}>
                         <View style={{
                             flexDirection: 'row',
