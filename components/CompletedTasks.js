@@ -79,11 +79,14 @@ const CompletedTasks = () => {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{
+            backgroundColor: '#E6E6FA'
+        }}>
             <Header />
 
             <View style={{
                 width: '100%',
+                height: '100%',
                 alignItems: 'center',
                 marginTop: 24
             }}>
@@ -166,7 +169,7 @@ const CompletedTasks = () => {
 const styles = StyleSheet.create({
     HomeContainer: {
         flex: 1,
-        backgroundColor: '#E6E6FA'
+        backgroundColor: '#E6E6FA',
     },
     projectTask: {
         justifyContent: 'center',

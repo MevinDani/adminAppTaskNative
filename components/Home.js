@@ -426,6 +426,12 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                // padding: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/work_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ALL</Text>
@@ -450,6 +456,11 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/ticket_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED OPEN</Text>
@@ -472,6 +483,11 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT PENDING</Text>
@@ -495,6 +511,11 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPT EXCEEDED</Text>
@@ -518,6 +539,11 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ACCEPTED ON HOLD</Text>
@@ -541,6 +567,11 @@ const Home = () => {
                                 width: 100,
                                 height: 100,
                                 margin: 8,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
                             }}>
                                 <ImageBackground style={{ height: '100%' }} source={require('../images/schedule_card.png')}>
                                     <Text style={{ color: 'white', padding: 4, fontSize: 16, fontWeight: 'bold' }}>ESCALATED</Text>
@@ -585,7 +616,14 @@ const Home = () => {
                                 <TouchableOpacity onPress={hardReset} style={{
                                     padding: 8,
                                     backgroundColor: '#6C757D',
-                                    borderRadius: 4
+                                    borderRadius: 4,
+                                    // backgroundColor: 'white',
+                                    padding: 8,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3,
+                                    elevation: 5,
                                 }}>
                                     <Text style={{ color: 'white' }}>Reset</Text>
                                 </TouchableOpacity>
@@ -595,7 +633,13 @@ const Home = () => {
                                     alignItems: 'center',
                                     padding: 8,
                                     backgroundColor: '#F8F9FA',
-                                    marginLeft: 14
+                                    marginLeft: 14,
+                                    padding: 8,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3,
+                                    elevation: 5,
                                 }}>
                                     <Image style={{ height: 30, width: 30 }} source={require('../images/filterIcon.png')}></Image>
                                     <Text style={{ color: 'black' }}>Filter</Text>
@@ -701,6 +745,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 4,
         flex: 1,
+
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+        elevation: 5,
+
     },
     projectImg: {
         width: 40,

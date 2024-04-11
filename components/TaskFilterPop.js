@@ -260,14 +260,26 @@ const TaskFilterPop = ({ onClose, onFilter }) => {
                         <TouchableOpacity onPress={handleReset} style={{
                             padding: 8,
                             backgroundColor: '#6C757D',
-                            borderRadius: 4
+                            borderRadius: 4,
+                            padding: 8,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3,
+                            elevation: 5,
                         }}>
                             <Text style={{ color: 'white' }}>Reset</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onClose} style={{
                             padding: 8,
                             backgroundColor: 'red',
-                            borderRadius: 4
+                            borderRadius: 4,
+                            padding: 8,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3,
+                            elevation: 5,
                         }}>
                             <Text style={{ color: 'white' }}>Close</Text>
                         </TouchableOpacity>

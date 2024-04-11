@@ -191,7 +191,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: 'center',
         paddingHorizontal: 12,
-        paddingVertical: 14
+        paddingVertical: 14,
+
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+        elevation: 5,
     },
     hamburgerButton: {
         // backgroundColor: 'red',
