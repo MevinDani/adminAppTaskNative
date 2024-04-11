@@ -231,10 +231,10 @@ const styles = StyleSheet.create({
     LogOutModal: {
         backgroundColor: 'white',
         position: 'absolute',
-        top: '40%',
+        top: '20%',
         left: '10%',
         width: '80%',
-        height: '20%',
+        height: '12%',
         borderRadius: 8
     }
 })

@@ -123,7 +123,7 @@ const MachineValidation = () => {
                 navigation.navigate('LoginPage');
             }
         } else {
-            setLoginError('INVALID')
+            setLoginError('not validated')
             // navigate('/');
             console.log("not validated")
         }
@@ -145,7 +145,7 @@ const MachineValidation = () => {
                     } else {
                         navigation.navigate('LoginPage');
 
-                        setLoginError('INVALID')
+                        setLoginError('not validated')
                         // navigate('/');
                         console.log("not validated")
                     }
