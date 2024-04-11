@@ -13,5 +13,6 @@ import TaskDetails from './components/TaskDetails';
 import TaskStatisticsChart from './components/TaskStatisticsChart';
 import TaskStatisticsKit from './components/TaskStatisticsKit';
 import StackedBarChartWithOnPressExample from './components/Test';
+import CompletedTasks from './components/CompletedTasks';
 
 AppRegistry.registerComponent(appName, () => MainApp);

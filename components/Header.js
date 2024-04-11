@@ -17,12 +17,12 @@ const Header = () => {
         setShowSidePanel(!showSidePanel);
     };
 
-    // useEffect(() => {
-    //     if (isFocused && route.name === 'EmployeeHome') {
-    //         setShowSidePanel(false);
-    //         // setshowLogoutPoP(false);
-    //     }
-    // }, [isFocused]);
+    useEffect(() => {
+        if (isFocused && route.name === 'Home') {
+            setShowSidePanel(false);
+            // setshowLogoutPoP(false);
+        }
+    }, [isFocused]);
 
     // // // Function to get all data from AsyncStorage
     // const getAllDataFromAsyncStorage = async () => {
@@ -71,7 +71,8 @@ const Header = () => {
     return (
         <>
             <View style={{
-                width: '100%'
+                width: '100%',
+                backgroundColor: 'white'
             }}>
 
                 {/* HeaderNav */}
@@ -106,16 +107,16 @@ const Header = () => {
                                 }}>Home</Text>
                             </View>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('CompletedTask')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('CompletedTasks')}>
                             <View style={{
                                 padding: 8,
                                 margin: 4,
                             }}>
                                 <Text style={{
                                     fontWeight: 'bold'
-                                }}>My completed Tasks</Text>
+                                }}>Completed Tasks</Text>
                             </View>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
                         <TouchableOpacity style={{
                             padding: 8,
                             margin: 4,

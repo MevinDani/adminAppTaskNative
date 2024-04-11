@@ -20,6 +20,7 @@ import NewProject from './NewProject';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastManager, { Toast } from 'toastify-react-native'
+import TaskFilterPop from './TaskFilterPop';
 
 
 const Home = () => {
@@ -33,6 +34,8 @@ const Home = () => {
     const [showProjectList, setShowProjectList] = useState(false)
 
     const [showNewProject, setShowNewProject] = useState(false)
+
+    const [showTaskFilter, setShowTaskFilter] = useState(false)
 
     const [userData, setUserData] = useState(null)
 
@@ -368,7 +371,7 @@ const Home = () => {
                             padding: 8
                         }}>
                             <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>All Task</Text>
-                            <TouchableOpacity style={{
+                            <TouchableOpacity onPress={() => setShowTaskFilter(!showTaskFilter)} style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -450,6 +453,11 @@ const Home = () => {
             {
                 showNewProject &&
                 <NewProject onClose={() => setShowNewProject(false)} />
+            }
+
+            {
+                showTaskFilter &&
+                <TaskFilterPop onClose={() => setShowTaskFilter(false)} />
             }
         </SafeAreaView >
     )

@@ -5,6 +5,7 @@ import Home from './components/Home';
 import TaskDetails from './components/TaskDetails';
 import Login from './components/Login';
 import MachineValidation from './components/MachineValidation';
+import CompletedTasks from './components/CompletedTasks';
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 
 
@@ -32,10 +33,13 @@ const MainApp = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+
                 <Stack.Screen name='MachineValidation' component={MachineValidation} options={{ headerShown: false }} />
                 <Stack.Screen name='LoginPage' component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name='TaskDetails' component={TaskDetails} options={{ headerShown: false }} />
+                <Stack.Screen name='CompletedTasks' component={CompletedTasks} options={{ headerShown: false }} />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
