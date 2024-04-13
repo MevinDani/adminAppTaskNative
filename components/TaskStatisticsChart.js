@@ -14,17 +14,24 @@ const TaskStatisticsChart = () => {
     const [fromDate, setSelectedFromDate] = useState('1900-01-01')
     const [toDate, setSelectedToDate] = useState('1900-01-01')
 
+    const [showLoader, setShowLoader] = useState(false)
+
     const [dummyTrigger, setDummyTrigger] = useState(false);
 
     useEffect(() => {
+        setShowLoader(true)
         const fetchData = async () => {
             setEmployeeData([])
             try {
-                console.log(`https://cubixweberp.com:156/api/CRMTaskCount/CPAYS/creator/all/-/${fromDate}/${toDate}`)
+                // console.log(`https://cubixweberp.com:156/api/CRMTaskCount/CPAYS/creator/all/-/${fromDate}/${toDate}`)
                 const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskCount/CPAYS/creator/all/-/${fromDate}/${toDate}`);
                 setEmployeeData(response.data);
+                setShowLoader(false)
+
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setShowLoader(false)
+
             }
         };
         fetchData();
@@ -94,6 +101,11 @@ const TaskStatisticsChart = () => {
     //     setSelectedDate(date);
     // };
 
+    useEffect(() => {
+        // Set 'Month' as the default selection when the component mounts
+        handleDateSelection('Month');
+    }, []); //
+
     const handleDateSelection = (selection) => {
         setSelectedDate(selection);
         let fromDate, toDate;
@@ -103,17 +115,15 @@ const TaskStatisticsChart = () => {
                 fromDate = toDate = today;
                 break;
             case 'Week':
-                fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()); // Start of the current week
+                fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); // Start of 7 days behind today
                 toDate = today;
                 break;
             case 'Month':
-                fromDate = new Date(today.getFullYear(), today.getMonth(), 1); // Start of the current month
+                fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30); // Start of 30 days behind today
                 toDate = today;
                 break;
             case 'Quarter':
-                console.log('quarterMnth')
-                const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
-                fromDate = new Date(today.getFullYear(), quarterStartMonth, 1); // Start of the current quarter
+                fromDate = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate()); // Start of 90 days behind today
                 toDate = today;
                 break;
             default:
@@ -172,7 +182,7 @@ const TaskStatisticsChart = () => {
     };
 
 
-    // console.log('employeeData', employeeData)
+    console.log('employeeData', employeeData)
     // console.log('chartData', chartData)
 
     return (
@@ -240,8 +250,8 @@ const TaskStatisticsChart = () => {
             <ScrollView vertical={true} nestedScrollEnabled={true}>
                 <View style={styles.container}>
                     {
-                        employeeData.length === 0 &&
-                        <View style={{ width: '100%:', justifyContent: 'center', alignItems: 'center' }}>
+                        showLoader &&
+                        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator size="large" color="#0000ff" />
                         </View>
                     }
@@ -279,6 +289,13 @@ const TaskStatisticsChart = () => {
                         </View>
 
                     </ScrollView>
+
+                    {
+                        !showLoader && employeeData.length === 0 &&
+                        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ color: 'red', fontSize: 16, fontWeight: 'bold' }}>No Data Available</Text>
+                        </View>
+                    }
                 </View>
             </ScrollView>
 

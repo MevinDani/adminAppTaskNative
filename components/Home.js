@@ -647,7 +647,7 @@ const Home = () => {
                                     shadowRadius: 3,
                                     elevation: 5,
                                 }}>
-                                    <Image style={{ height: 30, width: 30 }} source={require('../images/filterIcon.png')}></Image>
+                                    <Image style={{ height: 20, width: 20 }} source={require('../images/filterIcon.png')}></Image>
                                     <Text style={{ color: 'black' }}>Filter</Text>
                                 </TouchableOpacity>
                             </View>
@@ -689,7 +689,7 @@ const Home = () => {
                                     allTaskData && allTaskData?.map((task, index) => (
                                         <TouchableOpacity style={styles.tableRow} key={index} onPress={() => gotoTaskDetail(task)}>
                                             <Text style={[styles.dataCell, { justifyContent: 'space-between', flexDirection: 'row', width: '100%' }]}>
-                                                <Image style={{ width: 25, height: 25, marginRight: 12 }} source={getImageForStatus(task.latest_status)}></Image>
+                                                <Image style={{ width: 24, height: 24, marginRight: 12 }} resizeMode="contain" source={getImageForStatus(task.latest_status)}></Image>
                                                 <Text>{task.task_name}</Text>
                                             </Text>
                                             <Text style={styles.dataCell}>{task.latest_status}</Text>

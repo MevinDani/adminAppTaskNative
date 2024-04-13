@@ -17,15 +17,42 @@ const ProjectList = ({ onClose }) => {
 
     const [projectStatus, setProjectStatus] = useState([]);
 
+    // const fetchProjectListData = async () => {
+    //     try {
+    //         const response = await axios.get('https://cubixweberp.com:156/api/CRMProjectList/CPAYS/full');
+
+    //         if (response.status === 200) {
+    //             const initialEditViews = Array(response.data.length).fill(false);
+    //             const initialEditedDescriptions = Array(response.data.length).fill(null);
+    //             const initialProjectStatus = Array(response.data.length).fill("OPEN");
+    //             setProjectListData(response.data);
+    //             setEditViews(initialEditViews);
+    //             setEditedDescriptions(initialEditedDescriptions);
+    //             setProjectStatus(initialProjectStatus);
+    //         }
+    //     } catch (error) {
+    //         console.log('fetchProjectListData error', error);
+    //     }
+    // };
+
     const fetchProjectListData = async () => {
         try {
             const response = await axios.get('https://cubixweberp.com:156/api/CRMProjectList/CPAYS/full');
 
             if (response.status === 200) {
-                const initialEditViews = Array(response.data.length).fill(false);
-                const initialEditedDescriptions = Array(response.data.length).fill(null);
-                const initialProjectStatus = Array(response.data.length).fill("OPEN");
-                setProjectListData(response.data);
+                const updatedData = response.data.map(project => {
+                    return {
+                        ...project,
+                        Description: project.Description,
+                        status: project.status // Assuming you always want to set the status to "CLOSED"
+                    };
+                });
+
+                const initialEditViews = Array(updatedData.length).fill(false);
+                const initialEditedDescriptions = updatedData.map(project => project.Description);
+                const initialProjectStatus = updatedData.map(project => project.status);
+
+                setProjectListData(updatedData);
                 setEditViews(initialEditViews);
                 setEditedDescriptions(initialEditedDescriptions);
                 setProjectStatus(initialProjectStatus);
@@ -34,6 +61,7 @@ const ProjectList = ({ onClose }) => {
             console.log('fetchProjectListData error', error);
         }
     };
+
 
     useEffect(() => {
 
@@ -97,6 +125,8 @@ const ProjectList = ({ onClose }) => {
 
         let stringifiedJson = JSON.stringify(taskObjectForAPI)
 
+        console.log('stringifiedJson', stringifiedJson)
+
         try {
             const response = await axios.post(`https://cubixweberp.com:156/api/CRMProjectReg/EDIT/CPAYS/${Job_code}/${description}/${status}/${tranid}`, stringifiedJson, {
                 headers: {
@@ -116,7 +146,7 @@ const ProjectList = ({ onClose }) => {
         }
 
         // Send taskObjectForAPI to the API
-        console.log(taskObjectForAPI);
+        // console.log(taskObjectForAPI);
     };
 
     const handleCloseProject = (index) => {
@@ -130,8 +160,10 @@ const ProjectList = ({ onClose }) => {
         Toast.success('Description updated Successfully')
     }
 
-    console.log(editViews)
+    // console.log(editViews)
     console.log(editedDescriptions)
+
+    // console.log('projectListData', projectListData)
 
 
     return (

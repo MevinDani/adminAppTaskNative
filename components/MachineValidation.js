@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, Button, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { View, Text, ScrollView, TextInput, Button, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +25,8 @@ const MachineValidation = () => {
     const [regView, setRegView] = useState(false)
 
     const [privateKey, setPrivateKey] = useState('')
+
+    const [showLoader, setShowLoader] = useState(false)
 
     const handleGetPubKey = () => {
         // e.preventDefault();
@@ -131,6 +133,7 @@ const MachineValidation = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            setShowLoader(true)
             const checkUserData = async () => {
                 try {
                     const storedUserDataArrayJson = await AsyncStorage.getItem("userDataArray");
@@ -141,16 +144,20 @@ const MachineValidation = () => {
                             validateCompany(company)
                             // Redirect to LoginPage if userDataArray exists and has values
                             navigation.navigate('LoginPage');
+                            setShowLoader(false)
                         }
                     } else {
+                        setShowLoader(false)
+
                         navigation.navigate('LoginPage');
 
-                        setLoginError('not validated')
+                        setLoginError('Machine not Validated')
                         // navigate('/');
-                        console.log("not validated")
+                        console.log("Machine not Validated")
                     }
                 } catch (error) {
                     console.error('Error checking user data:', error);
+                    setShowLoader(false)
                 }
             };
 
@@ -161,7 +168,7 @@ const MachineValidation = () => {
         }, [])
     );
 
-
+    console.log('r', showLoader)
 
     return (
         <SafeAreaView style={styles.container}>
@@ -224,8 +231,16 @@ const MachineValidation = () => {
                         }}>
 
                             {
+                                showLoader &&
+                                <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginVertical: 12 }}>
+                                    <ActivityIndicator size={'large'} />
+                                    <Text style={{ color: '#FF5733', fontSize: 16 }}>Validating Machine, please wait ...</Text>
+                                </View>
+                            }
+
+                            {
                                 loginError !== '' &&
-                                <View>
+                                <View style={{ marginVertical: 12 }}>
                                     <Text style={{ color: 'red', fontWeight: 'bold' }}>{loginError}</Text>
                                 </View>
 

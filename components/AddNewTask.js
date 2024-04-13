@@ -643,8 +643,8 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                                 </View> */}
 
                     <View style={{ width: '98%', justifyContent: 'space-between', flexDirection: "row" }}>
-                        <Button title="Date Picker" onPress={showDatePicker} />
-                        <Button title="Time Picker" onPress={showTimePicker} />
+                        <Button title="Show Pick Date" onPress={showDatePicker} />
+                        <Button title="Show Pick Time" onPress={showTimePicker} />
                         <DateTimePickerModal
                             isVisible={isDatePickerVisible}
                             mode="date"
