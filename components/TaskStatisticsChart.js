@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { StackedBarChart, YAxis, XAxis } from 'react-native-svg-charts';
+// import { StackedBarChart, YAxis, XAxis } from 'react-native-svg-charts';
 import axios from 'axios';
 import Test2 from './Test2';
 // import { StackedBarChart } from 'react-native-chart-kit';

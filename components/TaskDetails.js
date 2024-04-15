@@ -68,6 +68,13 @@ const TaskDetails = () => {
 
     const [showLocationPop, setShowLocationPop] = useState(false)
 
+    const [chatBoxView, setChatBoxView] = useState(false)
+
+    const [chatMsg, setChatMsg] = useState('')
+
+    const [chatData, setChatData] = useState(null)
+
+
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().replace("T", " ").replace("Z", "");
 
@@ -79,21 +86,21 @@ const TaskDetails = () => {
         setSelectedStatus(item === selectedStatus ? null : item);
     };
 
-    // useEffect(() => {
-    //     const fetchUserData = async () => {
-    //         try {
-    //             const userDataJson = await AsyncStorage.getItem('userData');
-    //             const userData = JSON.parse(userDataJson);
-    //             // Now you have userData, you can use it here
-    //             setUserData(userData)
-    //             console.log('userData', userData)
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userDataJson = await AsyncStorage.getItem('userData');
+                const userData = JSON.parse(userDataJson);
+                // Now you have userData, you can use it here
+                setUserData(userData)
+                console.log('userData', userData)
 
-    //         } catch (error) {
-    //             console.error('Error fetching user data:', error);
-    //         }
-    //     };
-    //     fetchUserData();
-    // }, []);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
     useEffect(() => {
         const fetchTaskData = async () => {
@@ -183,6 +190,61 @@ const TaskDetails = () => {
             }
         }
     }, [taskHistory, taskData])
+
+    // fetchPrevMsg
+    const fetchPrevMessage = async () => {
+        try {
+            console.log(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${taskHistory[0].task_id}`)
+            const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${taskHistory[0].task_id}`)
+            console.log('fetchPrevMessage', response)
+            if (response.status === 200) {
+                setChatData(response.data)
+            }
+        } catch (error) {
+            console.error('fetchPrevMessageErr:', error);
+        }
+    }
+
+    console.log('chatData', chatData)
+
+    useEffect(() => {
+        if (taskHistory) {
+            fetchPrevMessage()
+        }
+    }, [taskHistory])
+
+    // send msg
+
+    const sendMsg = async () => {
+        setChatMsg('')
+        let msgData = [
+            {
+                cmpcode: 'CPAYS',
+                mode: 'ENTRY',
+                task_id: taskHistory[0].task_id,
+                chat_message: chatMsg,
+                task_ownder_id: taskHistory[0].task_owner_id,
+                created_on: formattedDate,
+                status: "n"
+            }
+        ]
+
+        let stringifiedJson = JSON.stringify(msgData)
+        console.log('stringifiedJson', stringifiedJson)
+        try {
+            const response = await axios.post(`https://cubixweberp.com:156/api/CRMTaskChat`, stringifiedJson, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(response)
+            fetchPrevMessage()
+            // if (response) {
+            // }
+        } catch (error) {
+            console.error('chat error:', error);
+        }
+    }
 
     // console.log('statusArray', statusArray)
 
@@ -1128,6 +1190,97 @@ const TaskDetails = () => {
                 </View>
             }
 
+            {/* chatBox */}
+            <View style={styles.ChatIcon}>
+                <TouchableOpacity onPress={() => setChatBoxView(true)}>
+                    <Image source={require('../images/chatIcon.png')} style={{ width: 50, height: 50 }}></Image>
+                </TouchableOpacity>
+            </View>
+
+            {
+                chatBoxView &&
+
+                <View style={styles.ViewImgModalWrapper}>
+                    <View style={styles.ViewImgModal}>
+
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 8
+                        }}>
+                            <Text style={{
+                                padding: 8,
+                                margin: 4,
+                                color: 'black',
+                                fontSize: 18,
+                                fontWeight: 'bold'
+                            }}>Chat</Text>
+
+                            <TouchableOpacity onPress={() => setChatBoxView(false)}>
+                                <Image style={{ width: 30, height: 30 }} source={require('../images/closeIcon.png')}></Image>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView vertical={true} style={{
+                            padding: 8
+                        }}>
+                            <View style={{
+                                backgroundColor: "#F3F3F3",
+                                minHeight: 500,
+                                padding: 12,
+                            }}>
+                                {
+                                    chatData && chatData.map((chat, index) => (
+                                        <View style={{
+                                            width: '100%',
+                                            justifyContent: chat.user_id === userData.empid ? 'flex-end' : 'flex-start',
+                                            flexDirection: 'row'
+                                        }} key={index}>
+                                            <View style={{
+                                                backgroundColor: chat.user_id === userData.empid ? 'white' : '#F0F8FF',
+                                                padding: 12,
+                                                margin: 8
+                                            }}>
+                                                <Text style={{ color: 'black' }}>{chat.chat_message}</Text>
+                                            </View>
+                                        </View>
+                                    ))
+                                }
+                            </View>
+                        </ScrollView>
+                        <View style={[styles.inputContainer]}>
+                            <View style={{
+                                padding: 8,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <TextInput
+                                    // style={[styles.input, { backgroundColor: '#E0FFFF' }]}
+                                    style={{ backgroundColor: '#E0FFFF', width: chatMsg !== '' ? '80%' : '100%' }}
+                                    placeholder='Type a message'
+                                    onChangeText={text => setChatMsg(text)}
+                                    value={chatMsg}
+                                />
+                                {
+                                    chatMsg !== '' &&
+                                    <TouchableOpacity onPress={sendMsg} style={{
+                                        padding: 8,
+                                        borderRadius: 4,
+                                        backgroundColor: '#0D6EFD'
+                                    }}>
+                                        <Text style={{ color: 'white' }}>Send</Text>
+                                    </TouchableOpacity>
+
+                                }
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            }
+            {/* chatBox */}
+
         </SafeAreaView >
     )
 }
@@ -1195,6 +1348,11 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '70%',
         borderRadius: 8
+    },
+    ChatIcon: {
+        position: 'absolute',
+        right: 15,
+        bottom: 15
     }
 })
 
