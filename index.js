@@ -15,6 +15,8 @@ import TaskStatisticsChart from './components/TaskStatisticsChart';
 import TaskStatisticsKit from './components/TaskStatisticsKit';
 import StackedBarChartWithOnPressExample from './components/Test';
 import CompletedTasks from './components/CompletedTasks';
+import Screen from './components/notifeeTest';
+
 
 // import firebase from 'firebase/app'; // Import Firebase
 // import 'firebase/database'; // Import Firebase Database module
@@ -22,18 +24,28 @@ import CompletedTasks from './components/CompletedTasks';
 
 // console.log(config)
 
-import database from '@react-native-firebase/database';
+// import database from '@react-native-firebase/database';
+// import { Alert } from 'react-native';
+// import notifee from '@notifee/react-native';
 
-// Access and log data from your Firebase Realtime Database
-database()
-    .ref('/') // Reference to the root of your database
-    .once('value') // Fetch the data once
-    .then(snapshot => {
-        console.log('Data:', snapshot.val());
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
+
+// // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
+// database()
+//     .ref('/') // Reference to the root of your database
+//     .on('value', snapshot => {
+//         const data = snapshot.val();
+//         // Alert.alert('Updated Data', JSON.stringify(data));
+//         console.log(data)
+//         notifee.displayNotification({
+//             title: 'Updated Data',
+//             body: JSON.stringify(data), // Convert data to string for body
+//         });
+//     }, error => {
+//         console.error('Error fetching data:', error);
+//         Alert.alert('Error', 'Failed to fetch data. Please try again later.');
+//     });
+
+
 
 
 // Initialize Firebase

@@ -1,6 +1,8 @@
+
 {
   "project_info": {
     "project_number": "804911630526",
+    "firebase_url": "https://adminchat-96c44-default-rtdb.firebaseio.com",
     "project_id": "adminchat-96c44",
     "storage_bucket": "adminchat-96c44.appspot.com"
   },

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground, ActivityIndicator, Modal, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Header from './Header'
@@ -23,7 +23,101 @@ import ToastManager, { Toast } from 'toastify-react-native'
 import TaskFilterPop from './TaskFilterPop';
 
 
+import database from '@react-native-firebase/database';
+import { Alert } from 'react-native';
+import notifee from '@notifee/react-native';
+
+import messaging from '@react-native-firebase/messaging';
+
+
+// // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
+// database()
+//     .ref('/') // Reference to the root of your database
+//     .on('value', snapshot => {
+//         const data = snapshot.val();
+//         Alert.alert('Updated Data', JSON.stringify(data));
+//         console.log(data)
+
+//         // async function onDisplayNotification() {
+
+//         //     console.log('inside displayNot')
+
+//         //     // Create a channel (required for Android)
+//         //     const channelId = await notifee.createChannel({
+//         //         id: 'default',
+//         //         name: 'Default Channel',
+//         //     });
+
+//         //     // Display a notification
+//         //     await notifee.displayNotification({
+//         //         title: 'Notification Title',
+//         //         body: JSON.stringify(data),
+//         //         android: {
+//         //             channelId,
+//         //             smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+//         //             // pressAction is needed if you want the notification to open the app when pressed
+//         //             pressAction: {
+//         //                 id: 'default',
+//         //             },
+//         //         },
+//         //     });
+//         // }
+
+//         // onDisplayNotification()
+//         notifee.displayNotification({
+//             title: 'Updated Data',
+//             body: JSON.stringify(data), // Convert data to string for body
+//         });
+//     }, error => {
+//         console.error('Error fetching data:', error);
+//         Alert.alert('Error', 'Failed to fetch data. Please try again later.');
+//     });
+
+
 const Home = () => {
+
+    const [fcmToken, setFcmToken] = useState(null);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [messageData, setMessageData] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+            // When a foreground message is received, set the message data and show the modal
+            setMessageData(remoteMessage.data);
+            setModalVisible(true);
+        });
+
+        return unsubscribe;
+    }, []);
+
+    const closeModal = () => {
+        // Close the modal
+        setModalVisible(false);
+    };
+
+    // useEffect(() => {
+    //     // Function to retrieve FCM token
+    //     const retrieveFcmToken = async () => {
+    //         try {
+    //             const token = await messaging().getToken();
+    //             setFcmToken(token);
+    //         } catch (error) {
+    //             console.error('Error retrieving FCM token:', error);
+    //         }
+    //     };
+
+    //     // Call the function to retrieve FCM token
+    //     retrieveFcmToken();
+
+    //     // Add listener to refresh FCM token if it changes
+    //     const unsubscribe = messaging().onTokenRefresh(retrieveFcmToken);
+
+    //     // Clean up subscription when component unmounts
+    //     return unsubscribe;
+    // }, []);
+
+    // console.log('fcmToken', fcmToken)
 
     const navigation = useNavigation()
 
@@ -65,7 +159,7 @@ const Home = () => {
     const [codeValue, setCodeValue] = useState(null);
 
     const handleTaskFilterClick = (data) => {
-        console.log('taskFilterData', data)
+        // console.log('taskFilterData', data)
         setTaskFilterData(data)
         // if (data.status !== '') {
         //     setStatus(data.status)
@@ -138,7 +232,7 @@ const Home = () => {
 
     const fetchFilteredTasks = async () => {
         setShowFilterActivity(true)
-        console.log('taskFilterDataFromFilterApi', taskFilterData)
+        // console.log('taskFilterDataFromFilterApi', taskFilterData)
         const empName = taskFilterData.EmpId !== '' ? taskFilterData.EmpId : 'all';
         const deptName = taskFilterData.Dept !== '' ? taskFilterData.Dept : 'all';
         const fromDate = taskFilterData.fromDate !== '' ? taskFilterData.fromDate : '1900-01-01';
@@ -235,7 +329,7 @@ const Home = () => {
         fetchUserData();
     }, []);
 
-    console.log('userData', userData)
+    // console.log('userData', userData)
 
     useEffect(() => {
         if (userData) {
@@ -716,6 +810,24 @@ const Home = () => {
             </ScrollView>
 
             {
+                modalVisible &&
+                <View
+                    // visible={modalVisible}
+                    // animationType="slide"
+                    // onRequestClose={closeModal}
+                    style={styles.modalContainer}
+                >
+                    {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> */}
+                    <View style={styles.modalContent}>
+                        <Text>New Message Received!</Text>
+                        <Text>{messageData ? JSON.stringify(messageData) : ''}</Text>
+                        <Button title="Close Modal" onPress={closeModal} />
+                    </View>
+                </View>
+            }
+
+
+            {
                 showNewTask &&
                 <AddNewTask onClose={() => setShowNewTask(false)} fetchAllTasks={fetchAllTasks} />
             }
@@ -794,6 +906,25 @@ const styles = StyleSheet.create({
         borderLeftWidth: 1,
         borderColor: 'white',
         color: "black"
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
+        zIndex: 2,
+        backgroundColor: '#00000080',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+    },
+    modalContent: {
+        backgroundColor: '#F7F7F7',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '94%'
     },
 })
 
