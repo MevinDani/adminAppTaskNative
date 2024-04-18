@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Button, Dimensions } from 'react-native'
+import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Button, Dimensions, ActivityIndicator } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import ToastManager, { Toast } from 'toastify-react-native'
@@ -13,9 +13,11 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import messaging from '@react-native-firebase/messaging';
+import { SERVER_KEY } from "@env";
 
 
-const AddNewTask = ({ onClose, fetchAllTasks }) => {
+
+const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
     // const [taskComesUnder, setTaskComesUnder] = useState('Common Job')
     // const [taskType, setTaskType] = useState('Inhouse')
     // const [includeTravel, setIncludeTravel] = useState('N')
@@ -278,9 +280,9 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
 
     console.log(userData, 'userData')
 
-    const showTaskSaveToast = () => {
-        Toast.success('Task Added Successfully')
-    }
+    // const showTaskSaveToast = () => {
+    //     Toast.success('Task Added Successfully')
+    // }
 
     const showEmptyTaskFields = () => {
         Toast.error('Form is not filled!')
@@ -432,8 +434,8 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                         "created_on": createdOn,
                         "task_creator_name": empId,
                         "task_creator_id": empId,
+                        "DEVICETOKEN_employee": selectedEmpId.DEVICETOKEN ? selectedEmpId.DEVICETOKEN : '',
                         "DEVICETOKEN_admin": fcmToken,
-                        "DEVICETOKEN_employee": selectedEmpId.DEVICETOKEN ? selectedEmpId.DEVICETOKEN : ''
                     }
                 ];
 
@@ -455,6 +457,8 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                 };
 
                 console.log('Request Data:', requestData);
+
+                console.log('notification', notification)
 
                 const response = await axios.post('https://cubixweberp.com:156/api/CRMTaskMain', JSON.stringify(requestData), {
                     headers: {
@@ -568,20 +572,25 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
 
     const [selectedEmpId, setSelectedEmpId] = useState('')
 
+    const [empListLoader, setEmpListLoader] = useState(false)
+
     const handleEmpIdSelect = (EmpId) => {
         setShowEmpIdList(false)
         setSelectedEmpId(EmpId)
     }
 
     const handleshowEmpIdList = async () => {
+        setEmpListLoader(true)
         setShowEmpIdList(!showEmpIdList)
         try {
             const response = await axios.get(`https://cubixweberp.com:156/api/PersonalInfoList/CPAYS/ALL/YES/ALL/ALL/ALL/ALL`)
             if (response.status === 200) {
                 setEmpIdData(response.data)
+                setEmpListLoader(false)
             }
         } catch (error) {
             console.log(error)
+            setEmpListLoader(false)
         }
     }
 
@@ -820,7 +829,14 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                         <Text style={{ color: 'white', fontWeight: 'bold' }}>select employee</Text>
                     </TouchableOpacity>
 
+                    {empListLoader &&
+                        <View style={{ width: '100%' }}>
+                            <ActivityIndicator size={'large'}></ActivityIndicator>
+                        </View>
+                    }
+
                     <View style={{ width: '100%' }}>
+
                         {
                             showEmpIdList &&
                             <ScrollView style={{ height: 200 }}>

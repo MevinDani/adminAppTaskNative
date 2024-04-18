@@ -133,9 +133,16 @@ const CompletedTasks = () => {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
                 }
-            } else {
-                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${code}`)
-                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${code}`)
+            } else if (taskUrl === 'COORDINATOR') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                if (response.status === 200) {
+                    setAllTaskData(response.data)
+                    setShowFilterActivity(false)
+                }
+            } else if (taskUrl === 'DEPT_ADMIN') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
@@ -156,9 +163,16 @@ const CompletedTasks = () => {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
                 }
-            } else {
-                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/1900-01-01/1900-01-01/-/all/1`)
-                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/1900-01-01/1900-01-01/-/all/1`)
+            } else if (taskUrl === 'COORDINATOR') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                if (response.status === 200) {
+                    setAllTaskData(response.data)
+                    setShowFilterActivity(false)
+                }
+            } else if (taskUrl === 'DEPT_ADMIN') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
@@ -178,11 +192,17 @@ const CompletedTasks = () => {
         // }
     }
 
+    // useEffect(() => {
+    //     if (userData) {
+    //         fetchCompletedTasks()
+    //     }
+    // }, [userData])
+
     useEffect(() => {
-        if (userData) {
+        if (userData && taskUrl !== '') {
             fetchCompletedTasks()
         }
-    }, [userData])
+    }, [userData, taskUrl])
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -199,7 +219,7 @@ const CompletedTasks = () => {
                     if (userData.onlineallow === 'SUPERADMIN') {
                         setTaskUrl('SUPERADMIN')
                     } else {
-                        setTaskUrl(`NOTSUPERADMIN`)
+                        setTaskUrl(userData.onlineallow)
                     }
                 }
 
@@ -217,7 +237,7 @@ const CompletedTasks = () => {
             if (userData.onlineallow === 'SUPERADMIN') {
                 setTaskUrl('SUPERADMIN')
             } else {
-                setTaskUrl(`NOTSUPERADMIN`)
+                setTaskUrl(userData.onlineallow)
             }
         }
 
@@ -233,9 +253,16 @@ const CompletedTasks = () => {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
                 }
-            } else {
-                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/1900-01-01/1900-01-01/-/all/1`)
-                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/${userData.empid}/-/all/all/${userData.Division}/1900-01-01/1900-01-01/-/all/1`)
+            } else if (taskUrl === 'COORDINATOR') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                if (response.status === 200) {
+                    setAllTaskData(response.data)
+                    setShowFilterActivity(false)
+                }
+            } else if (taskUrl === 'DEPT_ADMIN') {
+                console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
+                const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/dept/${userData.Division}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/1`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
@@ -284,6 +311,7 @@ const CompletedTasks = () => {
     };
 
     console.log('allTaskData', allTaskData)
+    console.log(showFilterActivity)
 
 
     return (

@@ -557,6 +557,12 @@ const Home = () => {
         });
     };
 
+
+    const showTaskSaveToast = () => {
+        Toast.success('Task Added Successfully')
+    }
+
+
     // console.log('allTaskData', allTaskData)
     return (
         <SafeAreaView style={styles.HomeContainer}>
@@ -935,7 +941,7 @@ const Home = () => {
 
             {
                 showNewTask &&
-                <AddNewTask onClose={() => setShowNewTask(false)} fetchAllTasks={fetchAllTasks} />
+                <AddNewTask onClose={() => setShowNewTask(false)} fetchAllTasks={fetchAllTasks} showTaskSaveToast={showTaskSaveToast} />
             }
 
             {
