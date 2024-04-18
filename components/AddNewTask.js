@@ -12,6 +12,8 @@ import { Linking } from 'react-native';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import messaging from '@react-native-firebase/messaging';
+
 
 const AddNewTask = ({ onClose, fetchAllTasks }) => {
     // const [taskComesUnder, setTaskComesUnder] = useState('Common Job')
@@ -47,6 +49,8 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
     const [showProject, setShowProject] = useState(false)
 
     const [selectedProject, setSelectedProject] = useState('')
+
+    const [fcmToken, setFcmToken] = useState(null);
 
     const navigation = useNavigation()
 
@@ -216,6 +220,43 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
         }
     }
 
+    useEffect(() => {
+        // Function to retrieve FCM token
+        const retrieveFcmToken = async () => {
+            try {
+                const token = await messaging().getToken();
+                setFcmToken(token);
+
+                // if (token) {
+                //     try {
+                //         const response = await axios.post(`https://demoURL/device_token=${token}`)
+
+                //         if (response.status === 200) {
+                //             console.log('fcmSaved')
+                //         }
+                //     } catch (error) {
+                //         console.error('Error sending FCM token:', error);
+                //     }
+                // }
+                // Save the token to AsyncStorage
+                await AsyncStorage.setItem('fcmToken', token);
+            } catch (error) {
+                console.error('Error retrieving FCM token:', error);
+            }
+        };
+
+        // Call the function to retrieve FCM token
+        retrieveFcmToken();
+
+        // Add listener to refresh FCM token if it changes
+        const unsubscribe = messaging().onTokenRefresh(retrieveFcmToken);
+
+        // Clean up subscription when component unmounts
+        return unsubscribe;
+    }, []);
+
+    console.log('fcmTokenAddTask', fcmToken)
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -379,9 +420,9 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                         "job_code": "",
                         "priority": priorityLevel,
                         "task_scheduledon": combinedDateTime,
-                        "task_owner_id": empId,
-                        "task_ownder_name": empId,
-                        "task_ownder_dept": "",
+                        "task_owner_id": selectedEmpId.EmpId,
+                        "task_ownder_name": selectedEmpId.Name,
+                        "task_ownder_dept": selectedEmpId.Division,
                         "task_comes_under": taskComesUnder,
                         "task_type": taskType,
                         "latest_status": "",
@@ -390,18 +431,43 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                         "latest_stage_code": "",
                         "created_on": createdOn,
                         "task_creator_name": empId,
-                        "task_creator_id": empId
+                        "task_creator_id": empId,
+                        "DEVICETOKEN_admin": fcmToken,
+                        "DEVICETOKEN_employee": selectedEmpId.DEVICETOKEN ? selectedEmpId.DEVICETOKEN : ''
                     }
                 ];
 
+                const notification = {
+                    // to: 'fi-N8AqNQwiICgBzLFfabt:APA91bHtQtMnDsV8tJI0FqP0Yi5rH8GjnsHPPDIDGN_U7Z0aqB8xifEtnh7cVPDBP88GG6BQ5uTR9Vl15KuDB42PPX093KTXTgv6YxNPcITNU3EBdT6yvq3RymvgH6VqQP-VJvchEZ2G',
+                    to: selectedEmpId.DEVICETOKEN,
+                    notification: {
+                        title: 'New Task',
+                        body: 'You are assigned a New Task', // Body should be a string
+                    },
+                    // Optionally include data payload
+                    data: {
+                        // task_id: task_id,
+                        task_creator_id: empId,
+                        task_ownder_id: selectedEmpId.EmpId,
+                        created_on: createdOn,
+                        task_scheduledon: combinedDateTime
+                    }
+                };
+
                 console.log('Request Data:', requestData);
 
-                const response = await axios.post('https://cubixweberp.com:156/api/CRMTaskMain', requestData);
+                const response = await axios.post('https://cubixweberp.com:156/api/CRMTaskMain', JSON.stringify(requestData), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
                 console.log('Response:', response.data);
 
                 // Assuming a successful response has status code 200
                 if (response.status === 200) {
+                    // Send the FCM token to the FCM API
+                    await sendFcmTokenToApi(notification);
                     showTaskSaveToast()
                     fetchAllTasks()
                     // fetchDataNew()
@@ -426,6 +492,22 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
         } else {
             console.log('field is empty')
             showEmptyTaskFields()
+        }
+    };
+
+    const sendFcmTokenToApi = async (notification) => {
+        try {
+            const response = await axios.post('https://fcm.googleapis.com/fcm/send', notification, {
+                // const response = await axios.post('https://fcm.googleapis.com/v1/projects/nativechatapp-9398f/messages:send', notification, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Key=${SERVER_KEY}` // Replace with your actual authorization token
+                }
+            });
+
+            console.log('FCM token sent to API:', response.data);
+        } catch (error) {
+            console.error('Error sending FCM token to API:', error);
         }
     };
 
@@ -479,6 +561,33 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
             task_scheduledon: task.task_scheduledon
         });
     };
+
+    const [showEmpIdList, setShowEmpIdList] = useState(false)
+
+    const [empIdData, setEmpIdData] = useState(null)
+
+    const [selectedEmpId, setSelectedEmpId] = useState('')
+
+    const handleEmpIdSelect = (EmpId) => {
+        setShowEmpIdList(false)
+        setSelectedEmpId(EmpId)
+    }
+
+    const handleshowEmpIdList = async () => {
+        setShowEmpIdList(!showEmpIdList)
+        try {
+            const response = await axios.get(`https://cubixweberp.com:156/api/PersonalInfoList/CPAYS/ALL/YES/ALL/ALL/ALL/ALL`)
+            if (response.status === 200) {
+                setEmpIdData(response.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    console.log('selectedEmpId', selectedEmpId)
+
+    // console.log('empIdData', empIdData)
     return (
         <View style={styles.modalContainer}>
             <ToastManager />
@@ -693,6 +802,110 @@ const AddNewTask = ({ onClose, fetchAllTasks }) => {
                         <Text style={{ color: 'white' }}>{combinedDateTime ? combinedDateTime.toLocaleString() : ''}</Text>
                     </View>
                 }
+
+                <View style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    // alignItems: 'center',
+                    marginTop: 4,
+                    padding: 8
+                }}>
+                    <TouchableOpacity onPress={() => handleshowEmpIdList()} style={{
+                        padding: 8,
+                        backgroundColor: 'black',
+                        borderRadius: 4,
+                        height: 35
+                    }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>select employee</Text>
+                    </TouchableOpacity>
+
+                    <View style={{ width: '100%' }}>
+                        {
+                            showEmpIdList &&
+                            <ScrollView style={{ height: 200 }}>
+                                {
+                                    empIdData && empIdData.map((item, index) => (
+                                        <TouchableOpacity onPress={() => handleEmpIdSelect(item)} key={index} style={{
+                                            backgroundColor: 'black', margin: 1, padding: 6
+                                        }}>
+                                            <Text style={{ color: 'white' }}>{item.EmpId}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                }
+                            </ScrollView>
+                        }
+                        {
+                            selectedEmpId &&
+                            <View style={{ alignItems: 'center', width: '100%' }}>
+                                <Text style={{ color: 'green', fontSize: 18, fontWeight: 'bold' }}>{selectedEmpId.EmpId}</Text>
+                            </View>
+                        }
+
+                    </View>
+
+                    {/* <TouchableOpacity onPress={() => handleshowDepIdList()} style={{
+                        padding: 8,
+                        backgroundColor: '#6C757D',
+                        borderRadius: 4
+                    }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>department</Text>
+                    </TouchableOpacity> */}
+                </View>
+
+                {/* <View style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    backgroundColor: 'white'
+                }}>
+                    <View style={{ width: '48%', }}>
+                        {
+                            showEmpIdList &&
+                            <ScrollView style={{ height: 200 }}>
+                                {
+                                    empIdData && empIdData.map((item, index) => (
+                                        <TouchableOpacity onPress={() => handleEmpIdSelect(item.EmpId)} key={index} style={{
+                                            backgroundColor: 'black', margin: 1, padding: 6
+                                        }}>
+                                            <Text style={{ color: 'white' }}>{item.EmpId}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                }
+                            </ScrollView>
+                        }
+                        {
+                            selectedEmpId &&
+                            <View style={{ alignItems: 'center', justifyContent: "flex-start", width: '100%' }}>
+                                <Text style={{ color: 'green', fontSize: 18, fontWeight: 'bold' }}>{selectedEmpId}</Text>
+                            </View>
+                        }
+
+                    </View>
+
+                    <View style={{ width: '48%', }}>
+                        {
+                            showDepIdList &&
+                            <ScrollView style={{ height: 200 }}>
+                                {
+                                    DepIdData && DepIdData.map((item, index) => (
+                                        <TouchableOpacity onPress={() => handleDeptSelect(item.Description)} key={index} style={{
+                                            backgroundColor: 'black', margin: 1, padding: 6
+                                        }}>
+                                            <Text style={{ color: 'white' }}>{item.Description}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                }
+                            </ScrollView>
+                        }
+                        {
+                            selectedDept &&
+                            <View style={{ alignItems: 'center', justifyContent: "flex-end", width: '100%' }}>
+                                <Text style={{ color: 'green', fontSize: 18, fontWeight: 'bold' }}>{selectedDept}</Text>
+                            </View>
+                        }
+                    </View>
+                </View> */}
 
 
 

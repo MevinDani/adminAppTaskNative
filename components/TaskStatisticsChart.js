@@ -182,7 +182,7 @@ const TaskStatisticsChart = () => {
     };
 
 
-    console.log('employeeData', employeeData)
+    // console.log('employeeData', employeeData)
     // console.log('chartData', chartData)
 
     return (

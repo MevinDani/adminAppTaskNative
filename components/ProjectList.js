@@ -157,7 +157,7 @@ const ProjectList = ({ onClose }) => {
 
 
     const showEditSuccessToast = () => {
-        Toast.success('Description updated Successfully')
+        Toast.success('Project updated Successfully')
     }
 
     // console.log(editViews)

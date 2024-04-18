@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         top: '20%',
         left: '10%',
         width: '80%',
-        height: '12%',
+        height: 160,
         borderRadius: 8
     }
 })

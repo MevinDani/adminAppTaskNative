@@ -8,6 +8,9 @@ import MachineValidation from './components/MachineValidation';
 import CompletedTasks from './components/CompletedTasks';
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import messaging from '@react-native-firebase/messaging';
 import { Alert, AppState } from 'react-native';
 import notifee from '@notifee/react-native';
@@ -41,11 +44,11 @@ const MainApp = () => {
 
 
     // Handle notification click event
-    messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log('Handle notification click event', remoteMessage);
-        // Navigate to TaskDetails when notification is clicked
-        navigationRef.current?.navigate('CompletedTasks');
-    });
+    // messaging().onNotificationOpenedApp((remoteMessage) => {
+    //     console.log('Handle notification click event', remoteMessage);
+    //     // Navigate to TaskDetails when notification is clicked
+    //     navigationRef.current?.navigate('CompletedTasks');
+    // });
 
     // Handle foreground message
     // messaging().onMessage(async (remoteMessage) => {
@@ -79,6 +82,8 @@ const MainApp = () => {
             try {
                 const token = await messaging().getToken();
                 setFcmToken(token);
+                // Save the token to AsyncStorage
+                await AsyncStorage.setItem('fcmToken', token);
             } catch (error) {
                 console.error('Error retrieving FCM token:', error);
             }
@@ -105,14 +110,56 @@ const MainApp = () => {
         // getToken()
     }, [])
 
-    console.log('fcmToken', fcmToken)
+    console.log('fcmTokenAdmin', fcmToken)
+
+    // Function to handle FCM messages when the app is in the background or terminated
+    // const handleBackgroundMessage = async (remoteMessage) => {
+    //     console.log('Message handled in the background!', remoteMessage);
+    //     // You can perform any necessary processing here, such as navigating to a specific screen
+    //     // Example: navigate to CompletedTasksPage
+    //     navigationRef.current?.navigate('CompletedTasks');
+    // };
+
+    // Function to handle navigation to TaskDetails
+    const navigateToTaskDetails = (data) => {
+        navigationRef.current?.navigate('TaskDetails', {
+            task_id: data.task_id,
+            created_on: data.created_on,
+            task_scheduledon: data.task_scheduledon,
+            openChat: true
+        });
+    };
+
+    // Configure messaging event handler
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+        console.log('Handle notification click event', remoteMessage);
+        // Check if the notification contains data
+        if (remoteMessage.data && remoteMessage.data.task_id) {
+            // Extract the task details from the notification data
+            const taskData = {
+                task_id: remoteMessage.data.task_id,
+                created_on: remoteMessage.data.created_on,
+                task_scheduledon: remoteMessage.data.task_scheduledon
+            };
+            // Navigate to TaskDetails screen with the task details
+            navigateToTaskDetails(taskData);
+        }
+    });
 
     // Function to handle FCM messages when the app is in the background or terminated
     const handleBackgroundMessage = async (remoteMessage) => {
         console.log('Message handled in the background!', remoteMessage);
-        // You can perform any necessary processing here, such as navigating to a specific screen
-        // Example: navigate to CompletedTasksPage
-        navigationRef.current?.navigate('CompletedTasks');
+        // Check if the notification contains data
+        if (remoteMessage.data && remoteMessage.data.task_id) {
+            // Extract the task details from the notification data
+            const taskData = {
+                task_id: remoteMessage.data.task_id,
+                created_on: remoteMessage.data.created_on,
+                task_scheduledon: remoteMessage.data.task_scheduledon
+            };
+            // Navigate to TaskDetails screen with the task details
+            navigateToTaskDetails(taskData);
+        }
     };
 
     // messaging().onMessage(handleBackgroundMessage);
@@ -120,6 +167,9 @@ const MainApp = () => {
 
     // Set up background message handler
     messaging().setBackgroundMessageHandler(handleBackgroundMessage);
+
+    // kill state
+    messaging().getInitialNotification(handleBackgroundMessage)
 
     // const setupNotificationChannels = async () => {
     //     try {

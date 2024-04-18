@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, TextInput, ScrollView } from 'react-native'
 import userAvt from '../images/userAvt.png'
 import ViewJobList from '../images/ic_view_job_list.png'
@@ -25,7 +25,7 @@ import { SERVER_KEY } from "@env";
 
 const TaskDetails = () => {
     const route = useRoute()
-    const { task_id, created_on, task_scheduledon } = route.params;
+    const { task_id, created_on, task_scheduledon, openChat } = route.params;
     const createdDate = created_on.split('T')[0]; // Extract date part
     const scheduledDate = task_scheduledon.split('T')[0]; // Extract date part
 
@@ -77,11 +77,16 @@ const TaskDetails = () => {
 
     const [chatData, setChatData] = useState(null)
 
+    const scrollViewRef = useRef();
 
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().replace("T", " ").replace("Z", "");
 
     // console.log(formattedDate);
+
+    useEffect(() => {
+        setChatBoxView(openChat);
+    }, []);
 
 
 
@@ -197,8 +202,8 @@ const TaskDetails = () => {
     // fetchPrevMsg
     const fetchPrevMessage = async () => {
         try {
-            console.log(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${taskHistory[0].task_id}`)
-            const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${taskHistory[0].task_id}`)
+            console.log(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${task_id}`)
+            const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskChatList/cpays/${task_id}`)
             console.log('fetchPrevMessage', response)
             if (response.status === 200) {
                 setChatData(response.data)
@@ -211,10 +216,10 @@ const TaskDetails = () => {
     console.log('chatData', chatData)
 
     useEffect(() => {
-        if (taskHistory) {
+        if (task_id) {
             fetchPrevMessage()
         }
-    }, [taskHistory])
+    }, [task_id])
 
     // send msg
 
@@ -224,9 +229,9 @@ const TaskDetails = () => {
             {
                 cmpcode: 'CPAYS',
                 mode: 'ENTRY',
-                task_id: taskHistory[0].task_id,
+                task_id: task_id,
                 chat_message: chatMsg,
-                task_ownder_id: taskHistory[0].task_owner_id,
+                task_ownder_id: taskData[0].task_owner_id,
                 created_on: formattedDate,
                 status: "n"
             }
@@ -238,24 +243,27 @@ const TaskDetails = () => {
             // Obtain the FCM token of the user
             const fcmToken = await messaging().getToken();
 
-            // Construct the notification payload
             const notification = {
-                from: fcmToken,
+                // to: 'fi-N8AqNQwiICgBzLFfabt:APA91bHtQtMnDsV8tJI0FqP0Yi5rH8GjnsHPPDIDGN_U7Z0aqB8xifEtnh7cVPDBP88GG6BQ5uTR9Vl15KuDB42PPX093KTXTgv6YxNPcITNU3EBdT6yvq3RymvgH6VqQP-VJvchEZ2G',
+                to: taskData[0].device_token ? taskData[0].device_token : "",
                 notification: {
                     title: 'New Message',
-                    body: {
-                        task_id: taskHistory[0].task_id,
-                        chat_message: chatMsg,
-                        task_ownder_id: taskHistory[0].task_owner_id,
-                    },
-                    // You can customize the notification further as needed
+                    body: 'You have a new message!', // Body should be a string
                 },
+                // Optionally include data payload
+                data: {
+                    task_id: task_id,
+                    chat_message: chatMsg,
+                    task_ownder_id: taskData[0]?.task_owner_id,
+                    created_on: taskData[0].created_on,
+                    task_scheduledon: taskData[0].task_scheduledon
+                }
             };
 
             console.log('notification', notification)
 
             // Send the FCM token to the FCM API
-            // await sendFcmTokenToApi(notification);
+            await sendFcmTokenToApi(notification);
 
             const response = await axios.post(`https://cubixweberp.com:156/api/CRMTaskChat`, stringifiedJson, {
                 headers: {
@@ -272,29 +280,19 @@ const TaskDetails = () => {
     }
 
     // Function to send the FCM token to the FCM API
+    // Function to send the FCM token to the FCM API
+    // Function to send the FCM token to the FCM API
     const sendFcmTokenToApi = async (notification) => {
         try {
-            // Construct the notification payload for sending the FCM token
-            // const notification = {
-            //     to: fcmToken,
-            //     data: {
-            //         task_id: taskHistory[0].task_id,
-            //         chat_message: chatMsg,
-            //         task_ownder_id: taskHistory[0].task_owner_id
-            //     },
-            // };
-
-            // Send the FCM token to the FCM API
-            const response = await fetch('https://fcm.googleapis.com/fcm/send', {
-                method: 'POST',
+            const response = await axios.post('https://fcm.googleapis.com/fcm/send', notification, {
+                // const response = await axios.post('https://fcm.googleapis.com/v1/projects/nativechatapp-9398f/messages:send', notification, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': SERVER_KEY, // Replace with your server key obtained from Firebase console
-                },
-                body: JSON.stringify(notification),
+                    'Authorization': `Key=${SERVER_KEY}` // Replace with your actual authorization token
+                }
             });
 
-            console.log('FCM token sent to API:', response);
+            console.log('FCM token sent to API:', response.data);
         } catch (error) {
             console.error('Error sending FCM token to API:', error);
         }
@@ -558,6 +556,15 @@ const TaskDetails = () => {
         setShowLocationPop(true)
         console.log(lat, long)
     }
+
+    // useEffect(() => {
+    //     // Scrolls to the bottom of the ScrollView when chatData changes
+    //     scrollViewRef.current.scrollToEnd({ animated: true });
+    // }, [chatBoxView]);
+
+    const scrollToBottom = () => {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+    };
 
 
 
@@ -1246,7 +1253,7 @@ const TaskDetails = () => {
 
             {/* chatBox */}
             <View style={styles.ChatIcon}>
-                <TouchableOpacity onPress={() => setChatBoxView(true)}>
+                <TouchableOpacity onPress={() => setChatBoxView(!chatBoxView)}>
                     <Image source={require('../images/chatIcon.png')} style={{ width: 50, height: 50 }}></Image>
                 </TouchableOpacity>
             </View>
@@ -1271,12 +1278,12 @@ const TaskDetails = () => {
                                 fontWeight: 'bold'
                             }}>Chat</Text>
 
-                            <TouchableOpacity onPress={() => setChatBoxView(false)}>
+                            <TouchableOpacity onPress={() => setChatBoxView(!chatBoxView)}>
                                 <Image style={{ width: 30, height: 30 }} source={require('../images/closeIcon.png')}></Image>
                             </TouchableOpacity>
                         </View>
 
-                        <ScrollView vertical={true} style={{
+                        <ScrollView vertical={true} ref={scrollViewRef} onLayout={scrollToBottom} style={{
                             padding: 8
                         }}>
                             <View style={{
