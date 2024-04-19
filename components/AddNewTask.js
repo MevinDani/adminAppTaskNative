@@ -502,10 +502,12 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
     const sendFcmTokenToApi = async (notification) => {
         try {
             const response = await axios.post('https://fcm.googleapis.com/fcm/send', notification, {
-                // const response = await axios.post('https://fcm.googleapis.com/v1/projects/nativechatapp-9398f/messages:send', notification, {
+                // const response = await axios.post('https://fcm.googleapis.com/v1/projects/adminchat-96c44/messages:send', notification, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Key=${SERVER_KEY}` // Replace with your actual authorization token
+                    'Authorization': `Key=${SERVER_KEY}`, // Replace with your actual authorization token
+
+                    // 'Authorization': `Bearer ${SERVER_KEY}`, 
                 }
             });
 

@@ -111,20 +111,47 @@ const Home = () => {
 
     console.log('fcmTokenFromHome', fcmToken)
 
+    // useEffect(() => {
+    //     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    //         // When a foreground message is received, set the message data and show the modal
+    //         setMessageData(remoteMessage.data);
+    //         setModalVisible(true);
+    //     });
+
+    //     return unsubscribe;
+    // }, []);
+
+    // const closeModal = () => {
+    //     // Close the modal
+    //     setModalVisible(false);
+    // };
+
+
+
+    const [msgModal, setmsgModal] = useState(false);
+
+    const [newTaskModal, setNewTaskModal] = useState(false);
+
+    // const [messageData, setMessageData] = useState(null);
+
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+
+            if (remoteMessage.notification.title === 'New Message') {
+                setmsgModal(true);
+            }
+            if (remoteMessage.notification.title === 'New Task') {
+                setNewTaskModal(true);
+            }
             // When a foreground message is received, set the message data and show the modal
             setMessageData(remoteMessage.data);
-            setModalVisible(true);
         });
 
         return unsubscribe;
     }, []);
 
-    const closeModal = () => {
-        // Close the modal
-        setModalVisible(false);
-    };
+    console.log('messageData', messageData)
+
 
     // useEffect(() => {
     //     // Function to retrieve FCM token
@@ -411,7 +438,7 @@ const Home = () => {
                     console.log('fcmSaved', response.data)
                 }
             } catch (error) {
-                console.error('Error sending FCM token:', error);
+                console.error('Error sending FCM token to cbx api from home:', error);
             }
         }
         if (fcmToken && userData) {
@@ -482,6 +509,8 @@ const Home = () => {
                 }
             } else if (taskUrl === 'COORDINATOR') {
                 console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                // const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/all/-/all/all/all/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+
                 const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
@@ -497,6 +526,7 @@ const Home = () => {
             }
         } catch (error) {
             console.log('fetchAllTasksErr', error)
+            setShowFilterActivity(false)
         }
     }
 
@@ -875,8 +905,14 @@ const Home = () => {
                                 }
 
                                 {
-                                    allTaskData === null &&
-                                    <ActivityIndicator color='blue' size='large'></ActivityIndicator>
+                                    allTaskData === null && showFilterActivity === false &&
+                                    <View style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        padding: 12
+                                    }}>
+                                        <Text style={{ color: 'red', fontWeight: 16, fontWeight: 'bold' }}>No Data Available</Text>
+                                    </View>
                                 }
 
                                 {
@@ -958,6 +994,48 @@ const Home = () => {
                 showTaskFilter &&
                 <TaskFilterPop onFilter={handleTaskFilterClick} onClose={() => setShowTaskFilter(false)} />
             }
+
+            {
+                msgModal &&
+                <View
+                    // visible={modalVisible}
+                    // animationType="slide"
+                    // onRequestClose={closeModal}
+                    style={styles.mapmodalContainer}
+                >
+                    {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> */}
+                    <View style={styles.mapmodalContent}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>New Message Received!</Text>
+                        <View>
+                            <Text>
+                                {messageData.task_ownder_id} send you a message
+                            </Text>
+                        </View>
+                        <Button title="OpenChat" onPress={() => navigateToTaskDetails(messageData)} />
+                    </View>
+                </View>
+            }
+
+            {
+                newTaskModal &&
+                <View
+                    // visible={modalVisible}
+                    // animationType="slide"
+                    // onRequestClose={closeModal}
+                    style={styles.mapmodalContainer}
+                >
+                    {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> */}
+                    <View style={styles.mapmodalContent}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>New Task assigned</Text>
+                        <View>
+                            <Text>
+                                {messageData.task_creator_id} assigned you a Task
+                            </Text>
+                        </View>
+                        <Button title="OpenChat" onPress={() => setNewTaskModal(!newTaskModal)} />
+                    </View>
+                </View>
+            }
         </SafeAreaView >
     )
 }
@@ -1032,6 +1110,25 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     modalContent: {
+        backgroundColor: '#F7F7F7',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '94%'
+    },
+    mapmodalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
+        zIndex: 2,
+        backgroundColor: '#00000080',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+    },
+    mapmodalContent: {
         backgroundColor: '#F7F7F7',
         padding: 15,
         borderRadius: 10,

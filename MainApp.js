@@ -13,8 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import messaging from '@react-native-firebase/messaging';
 import { Alert, AppState } from 'react-native';
-import notifee from '@notifee/react-native';
-import { Android } from '@notifee/react-native';
+// import notifee from '@notifee/react-native';
+// import { Android } from '@notifee/react-native';
 import { PermissionsAndroid } from 'react-native';
 
 
