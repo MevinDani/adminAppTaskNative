@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, TextInput, ScrollView } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, TextInput, ScrollView, Button } from 'react-native'
 import userAvt from '../images/userAvt.png'
 import ViewJobList from '../images/ic_view_job_list.png'
 import TaskOpen from '../images/task_open.png'
@@ -12,7 +12,7 @@ import TaskStart from '../images/task_start_in_path.png'
 import TaskEnd from '../images/task_end.png'
 import completed from '../images/ic_check_scanned_button.png'
 import beyondScope from '../images/task_end_in_path.png'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Header from './Header'
@@ -86,11 +86,11 @@ const TaskDetails = () => {
 
     const [newTaskModal, setNewTaskModal] = useState(false);
 
-    // const [messageData, setMessageData] = useState(null);
+    const [messageData, setMessageData] = useState(null);
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-
+            setMessageData(remoteMessage.data);
             if (remoteMessage.notification.title === 'New Message') {
                 setmsgModal(true);
             }
@@ -98,7 +98,7 @@ const TaskDetails = () => {
                 setNewTaskModal(true);
             }
             // When a foreground message is received, set the message data and show the modal
-            setMessageData(remoteMessage.data);
+
         });
 
         return unsubscribe;
@@ -255,7 +255,7 @@ const TaskDetails = () => {
                 mode: 'ENTRY',
                 task_id: task_id,
                 chat_message: chatMsg,
-                task_ownder_id: taskData[0].task_owner_id,
+                task_ownder_id: taskData[0].task_creator_id,
                 created_on: formattedDate,
                 status: "n"
             }
@@ -278,7 +278,7 @@ const TaskDetails = () => {
                 data: {
                     task_id: task_id,
                     chat_message: chatMsg,
-                    task_ownder_id: taskData[0]?.task_owner_id,
+                    task_ownder_id: taskData[0]?.task_creator_id,
                     created_on: taskData[0].created_on,
                     task_scheduledon: taskData[0].task_scheduledon
                 }
@@ -294,11 +294,11 @@ const TaskDetails = () => {
                 }
             })
 
-            if (response.data === 200) {
+            if (response.status === 200) {
+                fetchPrevMessage()
                 // Send the FCM token to the FCM API
                 await sendFcmTokenToApi(notification);
                 console.log(response.data)
-                fetchPrevMessage()
             }
 
             // console.log(response)
@@ -319,7 +319,7 @@ const TaskDetails = () => {
                 // const response = await axios.post('https://fcm.googleapis.com/v1/projects/nativechatapp-9398f/messages:send', notification, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Key=${SERVER_KEY}` // Replace with your actual authorization token
+                    'Authorization': `key=${SERVER_KEY}` // Replace with your actual authorization token
                 }
             });
 
@@ -592,25 +592,37 @@ const TaskDetails = () => {
     //     // Scrolls to the bottom of the ScrollView when chatData changes
     //     scrollViewRef.current.scrollToEnd({ animated: true });
     // }, [chatBoxView]);
+    const navigation = useNavigation()
 
     const scrollToBottom = () => {
         scrollViewRef.current.scrollToEnd({ animated: true });
     };
 
+    const openNewMsg = async () => {
+        await fetchPrevMessage()
+        scrollToBottom()
+        setmsgModal(false)
+    }
 
+    const navigateToNewTask = () => {
+        setNewTaskModal(!newTaskModal)
+        navigation.navigate('Home')
+    }
 
     // console.log('timeDifference', timeDifference)
 
-    console.log('userAttendanceFromDet', userAttendance)
+    // console.log('userAttendanceFromDet', userAttendance)
 
     console.log('taskData', taskData)
-    console.log('taskHistory', taskHistory)
+    // console.log('taskHistory', taskHistory)
 
     // console.log(allStatusList)
 
     // console.log(statusArray)
 
     // console.log(task_id, created_on, task_scheduledon)
+
+    console.log(chatData)
     return (
         <SafeAreaView style={styles.container}>
             <ToastManager width={350} height={100} textStyle={{ fontSize: 17 }} />
@@ -1388,7 +1400,9 @@ const TaskDetails = () => {
                                 {messageData.task_ownder_id} send you a message
                             </Text>
                         </View>
-                        <Button title="OpenChat" onPress={() => navigateToTaskDetails(messageData)} />
+                        {/* <Button title="OpenChat" onPress={() => navigateToTaskDetails(messageData)} /> */}
+
+                        <Button title="OpenChat" onPress={() => openNewMsg()} />
                     </View>
                 </View>
             }
@@ -1409,7 +1423,8 @@ const TaskDetails = () => {
                                 {messageData.task_creator_id} assigned you a Task
                             </Text>
                         </View>
-                        <Button title="OpenChat" onPress={() => setNewTaskModal(!newTaskModal)} />
+                        {/* <Button title="OpenChat" onPress={() => setNewTaskModal(!newTaskModal)} /> */}
+                        <Button title="OpenChat" onPress={() => navigateToNewTask()} />
                     </View>
                 </View>
             }

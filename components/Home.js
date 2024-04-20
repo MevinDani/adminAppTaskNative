@@ -137,6 +137,10 @@ const Home = () => {
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
 
+            console.log(remoteMessage)
+
+            setMessageData(remoteMessage.data);
+
             if (remoteMessage.notification.title === 'New Message') {
                 setmsgModal(true);
             }
@@ -144,7 +148,6 @@ const Home = () => {
                 setNewTaskModal(true);
             }
             // When a foreground message is received, set the message data and show the modal
-            setMessageData(remoteMessage.data);
         });
 
         return unsubscribe;
@@ -592,8 +595,20 @@ const Home = () => {
         Toast.success('Task Added Successfully')
     }
 
+    const navigateToTaskDetails = (data) => {
+        setmsgModal(false);
+        navigation.navigate('TaskDetails', {
+            task_id: data.task_id,
+            created_on: data.created_on,
+            task_scheduledon: data.task_scheduledon,
+            openChat: true
+        });
+    };
+
 
     // console.log('allTaskData', allTaskData)
+
+    console.log('messageData', messageData)
     return (
         <SafeAreaView style={styles.HomeContainer}>
             <ToastManager />
