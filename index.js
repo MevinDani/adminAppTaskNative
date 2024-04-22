@@ -24,26 +24,26 @@ import Screen from './components/notifeeTest';
 
 // console.log(config)
 
-// import database from '@react-native-firebase/database';
-// import { Alert } from 'react-native';
-// import notifee from '@notifee/react-native';
+import database from '@react-native-firebase/database';
+import { Alert } from 'react-native';
+import notifee from '@notifee/react-native';
 
 
-// // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
-// database()
-//     .ref('/') // Reference to the root of your database
-//     .on('value', snapshot => {
-//         const data = snapshot.val();
-//         // Alert.alert('Updated Data', JSON.stringify(data));
-//         console.log(data)
-//         notifee.displayNotification({
-//             title: 'Updated Data',
-//             body: JSON.stringify(data), // Convert data to string for body
-//         });
-//     }, error => {
-//         console.error('Error fetching data:', error);
-//         Alert.alert('Error', 'Failed to fetch data. Please try again later.');
-//     });
+// Access data from your Firebase Realtime Database and display it in an alert whenever it updates
+database()
+    .ref('/') // Reference to the root of your database
+    .on('value', snapshot => {
+        const data = snapshot.val();
+        // Alert.alert('Updated Data', JSON.stringify(data));
+        console.log('databaseData', data)
+        // notifee.displayNotification({
+        //     title: 'Updated Data',
+        //     body: JSON.stringify(data), // Convert data to string for body
+        // });
+    }, error => {
+        console.error('Error fetching data:', error);
+        Alert.alert('Error', 'Failed to fetch data. Please try again later.');
+    });
 
 
 

@@ -596,6 +596,18 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
         }
     }
 
+    const getCurrentDate = () => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth(); // Month is zero-based
+        const day = currentDate.getDate();
+
+        // Return the current date in the required format
+        return new Date(year, month, day);
+    };
+
+
+
     console.log('selectedEmpId', selectedEmpId)
 
     // console.log('empIdData', empIdData)
@@ -768,6 +780,7 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
                         <DateTimePickerModal
                             isVisible={isDatePickerVisible}
                             mode="date"
+                            minimumDate={getCurrentDate()}
                             onConfirm={handleDateConfirm}
                             onCancel={hideDatePicker}
                         />
