@@ -31,7 +31,7 @@ import notifee from '@notifee/react-native';
 
 // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
 database()
-    .ref('/') // Reference to the root of your database
+    .ref('userLocations') // Reference to the root of your database
     .on('value', snapshot => {
         const data = snapshot.val();
         // Alert.alert('Updated Data', JSON.stringify(data));

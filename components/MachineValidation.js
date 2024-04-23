@@ -149,7 +149,7 @@ const MachineValidation = () => {
                     } else {
                         setShowLoader(false)
 
-                        navigation.navigate('LoginPage');
+                        // navigation.navigate('LoginPage');
 
                         setLoginError('Machine not Validated')
                         // navigate('/');
