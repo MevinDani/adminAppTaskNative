@@ -101,11 +101,11 @@ const EmpLocation = () => {
                 // Check if the key matches the empId
                 if (key === empId) {
                     // Extract location details for the employee
-                    const { latitude, longitude } = dbUserLocations[key];
+                    const { latitude, longitude, latitudeDelta, longitudeDelta } = dbUserLocations[key];
 
                     console.log(`Location details for ${empId}: Latitude ${latitude}, Longitude ${longitude}`);
                     // Update state with the user's location
-                    setUserLocation({ latitude, longitude });
+                    setUserLocation({ latitude, longitude, latitudeDelta, longitudeDelta });
                     locationFound = true;
                     break; // Exit loop once a match is found
                 }
@@ -175,7 +175,7 @@ const EmpLocation = () => {
                     <View style={styles.ViewImgModal}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', padding: 12 }}>
                             <Text style={{ padding: 8, color: 'black', fontSize: 18 }}>User Location</Text>
-                            <TouchableOpacity style={{ backgroundColor: 'red', padding: 8 }} onPress={() => setShowMap(false)}>
+                            <TouchableOpacity style={{ backgroundColor: 'red', padding: 8, borderRadius: 4 }} onPress={() => setShowMap(false)}>
                                 <Text style={{ color: 'white' }}>Close</Text>
                             </TouchableOpacity>
                         </View>
@@ -194,13 +194,17 @@ const EmpLocation = () => {
                                     <MapView
                                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                                         style={styles.map}
-                                        region={{
-                                            latitude: 37.78825,
-                                            longitude: -122.4324,
-                                            latitudeDelta: 0.015,
-                                            longitudeDelta: 0.0121,
+                                        initialRegion={{
+                                            latitude: userLocation.latitude,
+                                            longitude: userLocation.longitude,
+                                            latitudeDelta: userLocation.latitudeDelta,
+                                            longitudeDelta: userLocation.longitudeDelta,
                                         }}
                                     >
+                                        <Marker
+                                            coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}
+                                        // image={{ uri: 'custom_pin' }}
+                                        />
                                     </MapView>
                                     {/* <MapView style={styles.map} initialRegion={userLocation} provider={PROVIDER_GOOGLE}>
                                         <Marker coordinate={userLocation} />
@@ -214,8 +218,13 @@ const EmpLocation = () => {
                         {
                             userLocation &&
                             <View style={{ width: '100%', padding: 8, paddingBottom: 12, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: 'auto' }}>
-                                <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.latitude}</Text>
-                                <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.longitude}</Text>
+
+                                {/* <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.latitude.toFixed(3)}</Text>
+                                <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.longitude.toFixed(3)}</Text> */}
+
+                                <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Latitude: {userLocation.latitude.toFixed(3)}</Text>
+                                <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Longitude: {userLocation.longitude.toFixed(3)}</Text>
+
                             </View>
                         }
                     </View>
@@ -247,7 +256,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'green',
-        height: 400,
+        height: 450,
         width: '100%',
     },
     map: {
@@ -258,6 +267,23 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         // width: Dimensions.get('window').width,
         // height: Dimensions.get('window').height,
+    },
+
+    container: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    nmap: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
 })
 
