@@ -26,7 +26,7 @@ import Screen from './components/notifeeTest';
 
 import database from '@react-native-firebase/database';
 import { Alert } from 'react-native';
-import notifee from '@notifee/react-native';
+// import notifee from '@notifee/react-native';
 
 
 // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
@@ -35,7 +35,7 @@ database()
     .on('value', snapshot => {
         const data = snapshot.val();
         // Alert.alert('Updated Data', JSON.stringify(data));
-        console.log('databaseData', data)
+        // console.log('databaseData', data)
         // notifee.displayNotification({
         //     title: 'Updated Data',
         //     body: JSON.stringify(data), // Convert data to string for body

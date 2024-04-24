@@ -23,11 +23,12 @@ import ToastManager, { Toast } from 'toastify-react-native'
 import TaskFilterPop from './TaskFilterPop';
 
 
-import database from '@react-native-firebase/database';
-import { Alert } from 'react-native';
-import notifee from '@notifee/react-native';
+// import database from '@react-native-firebase/database';
+// import { Alert } from 'react-native';
+// import notifee from '@notifee/react-native';
 
 import messaging from '@react-native-firebase/messaging';
+import EmpLocation from './EmpLocation';
 
 
 // // Access data from your Firebase Realtime Database and display it in an alert whenever it updates
@@ -965,6 +966,11 @@ const Home = () => {
                     {/* statisticChart */}
                     <TaskStatisticsChart />
                     {/* statisticChart */}
+
+
+                    {/* empLocation */}
+                    <EmpLocation />
+                    {/* empLocation */}
 
 
 
