@@ -6,9 +6,11 @@ import { ActivityIndicator } from 'react-native';
 import database from '@react-native-firebase/database';
 import { Alert } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE, PROVIDER_OSMDROID } from 'react-native-maps';
+import mapMan from '../images/mapMan.png'
+import mapManS from '../images/mapManS.png'
 
 
-const EmpLocation = () => {
+const EmpLocation = ({ setShowMap, showMap }) => {
 
 
 
@@ -73,7 +75,7 @@ const EmpLocation = () => {
 
     const [userLocation, setUserLocation] = useState(null)
 
-    const [showMap, setShowMap] = useState(false)
+    // const [showMap, setShowMap] = useState(false)
 
     const getEmpData = async () => {
         setEmpListLoader(true)
@@ -170,65 +172,67 @@ const EmpLocation = () => {
             </View>
 
             {
-                showMap &&
-                <View style={styles.ViewImgModalWrapper}>
-                    <View style={styles.ViewImgModal}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', padding: 12 }}>
-                            <Text style={{ padding: 8, color: 'black', fontSize: 18 }}>User Location</Text>
-                            <TouchableOpacity style={{ backgroundColor: 'red', padding: 8, borderRadius: 4 }} onPress={() => setShowMap(false)}>
-                                <Text style={{ color: 'white' }}>Close</Text>
-                            </TouchableOpacity>
-                        </View>
+                // showMap &&
+                // <View style={styles.ViewImgModalWrapper}>
+                //     <View style={styles.ViewImgModal}>
+                //         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', padding: 12 }}>
+                //             <Text style={{ padding: 8, color: 'black', fontSize: 18 }}>User Location</Text>
+                //             <TouchableOpacity style={{ backgroundColor: 'red', padding: 8, borderRadius: 4 }} onPress={() => setShowMap(false)}>
+                //                 <Text style={{ color: 'white' }}>Close</Text>
+                //             </TouchableOpacity>
+                //         </View>
 
-                        {
-                            userLocation === null &&
-                            <View style={{ width: '100%', padding: 8, alignItems: 'center' }}>
-                                <Text style={{ color: 'red', fontWeight: 'bold' }}>User Location not available</Text>
-                            </View>
-                        }
+                //         {
+                //             userLocation === null &&
+                //             <View style={{ width: '100%', padding: 8, alignItems: 'center' }}>
+                //                 <Text style={{ color: 'red', fontWeight: 'bold' }}>User Location not available</Text>
+                //             </View>
+                //         }
 
-                        {/* MAPAREA */}
-                        {userLocation && (
-                            <View style={styles.mapCont}>
-                                <>
-                                    <MapView
-                                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                                        style={styles.map}
-                                        initialRegion={{
-                                            latitude: userLocation.latitude,
-                                            longitude: userLocation.longitude,
-                                            latitudeDelta: userLocation.latitudeDelta,
-                                            longitudeDelta: userLocation.longitudeDelta,
-                                        }}
-                                    >
-                                        <Marker
-                                            coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}
-                                        // image={{ uri: 'custom_pin' }}
-                                        />
-                                    </MapView>
-                                    {/* <MapView style={styles.map} initialRegion={userLocation} provider={PROVIDER_GOOGLE}>
-                                        <Marker coordinate={userLocation} />
-                                    </MapView> */}
-                                    <Text>Test</Text>
-                                </>
-                            </View>
-                        )}
-                        {/* MAPAREA */}
+                //         {/* MAPAREA */}
+                //         {userLocation && (
+                //             <View style={styles.mapCont}>
+                //                 <>
+                //                     <MapView
+                //                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                //                         style={styles.map}
+                //                         initialRegion={{
+                //                             latitude: userLocation.latitude,
+                //                             longitude: userLocation.longitude,
+                //                             latitudeDelta: 0.09,
+                //                             longitudeDelta: 0.03,
+                //                         }}
+                //                     >
+                //                         <Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}>
+                //                             <Image
+                //                                 source={mapManS}
+                //                             // style={{ width: 50, height: 100 }}
+                //                             />
+                //                         </Marker>
+                //                     </MapView>
+                //                     {/* <MapView style={styles.map} initialRegion={userLocation} provider={PROVIDER_GOOGLE}>
+                //                         <Marker coordinate={userLocation} />
+                //                     </MapView> */}
+                //                     {/* <Text>Test</Text> */}
+                //                 </>
+                //             </View>
+                //         )}
+                //         {/* MAPAREA */}
 
-                        {
-                            userLocation &&
-                            <View style={{ width: '100%', padding: 8, paddingBottom: 12, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: 'auto' }}>
+                //         {
+                //             userLocation &&
+                //             <View style={{ width: '100%', padding: 8, paddingBottom: 12, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: 'auto' }}>
 
-                                {/* <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.latitude.toFixed(3)}</Text>
-                                <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.longitude.toFixed(3)}</Text> */}
+                //                 {/* <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.latitude.toFixed(3)}</Text>
+                //                 <Text style={{ backgroundColor: 'green', color: 'white', padding: 12, borderRadius: 4 }}>{userLocation.longitude.toFixed(3)}</Text> */}
 
-                                <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Latitude: {userLocation.latitude.toFixed(3)}</Text>
-                                <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Longitude: {userLocation.longitude.toFixed(3)}</Text>
+                //                 <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Latitude: {userLocation.latitude.toFixed(3)}</Text>
+                //                 <Text style={{ padding: 8, margin: 2, backgroundColor: 'green', color: 'white' }}>Longitude: {userLocation.longitude.toFixed(3)}</Text>
 
-                            </View>
-                        }
-                    </View>
-                </View>
+                //             </View>
+                //         }
+                //     </View>
+                // </View>
             }
 
         </>
