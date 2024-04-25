@@ -499,6 +499,7 @@ const Home = () => {
             } else if (taskUrl === 'COORDINATOR') {
                 console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                // const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/all/-/all/all/all/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
@@ -529,8 +530,8 @@ const Home = () => {
             } else if (taskUrl === 'COORDINATOR') {
                 console.log(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 // const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/all/-/all/all/all/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
-
                 const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/creator/${userData.empid}/-/all/all/${userData.Division}/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
+                // const response = await axios.get(`https://cubixweberp.com:156/api/CRMTaskMainListFilter/CPAYS/all/all/-/all/all/all/${fromDate}/${toDate}/${searchTerm}/${priority}/${status}`)
                 if (response.status === 200) {
                     setAllTaskData(response.data)
                     setShowFilterActivity(false)
@@ -1167,7 +1168,7 @@ const Home = () => {
                                     >
                                         <Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}>
                                             <Image
-                                                source={mapManS}
+                                                source={mapMan}
                                             // style={{ width: 50, height: 100 }}
                                             />
                                         </Marker>

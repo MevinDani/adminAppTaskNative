@@ -22,6 +22,12 @@ import messaging from '@react-native-firebase/messaging';
 import { SERVER_KEY } from "@env";
 
 
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE, PROVIDER_OSMDROID } from 'react-native-maps';
+import mapMan from '../images/mapMan.png'
+import mapManS from '../images/mapManS.png'
+
+
+
 
 const TaskDetails = () => {
     const route = useRoute()
@@ -583,10 +589,21 @@ const TaskDetails = () => {
         }
     }, [taskHistory])
 
-    const showLocation = async (lat, long) => {
-        setShowLocationPop(true)
-        console.log(lat, long)
-    }
+
+
+    const [userLocation, setUserLocation] = useState(null)
+
+
+
+
+    const showLocation = async (latitude, longitude) => {
+        setShowLocationPop(true);
+        console.log('lat&long');
+        console.log(latitude, longitude);
+        // Convert latitude and longitude to numbers before setting them to state
+        setUserLocation({ latitude: Number(latitude), longitude: Number(longitude) });
+    };
+
 
     // useEffect(() => {
     //     // Scrolls to the bottom of the ScrollView when chatData changes
@@ -1285,7 +1302,31 @@ const TaskDetails = () => {
                                 marginBottom: 12
                             }}>
 
-
+                                <View style={styles.mapCont}>
+                                    <>
+                                        <MapView
+                                            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                                            style={styles.map}
+                                            initialRegion={{
+                                                latitude: userLocation.latitude,
+                                                longitude: userLocation.longitude,
+                                                latitudeDelta: 0.09,
+                                                longitudeDelta: 0.03,
+                                            }}
+                                        >
+                                            <Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}>
+                                                <Image
+                                                    source={mapMan}
+                                                // style={{ width: 50, height: 100 }}
+                                                />
+                                            </Marker>
+                                        </MapView>
+                                        {/* <MapView style={styles.map} initialRegion={userLocation} provider={PROVIDER_GOOGLE}>
+                                        <Marker coordinate={userLocation} />
+                                    </MapView> */}
+                                        {/* <Text>Test</Text> */}
+                                    </>
+                                </View>
                             </View>
                         </ScrollView>
 
@@ -1521,6 +1562,22 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         width: '94%'
+    },
+    mapCont: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'green',
+        height: 450,
+        width: '100%',
+    },
+    map: {
+        // width: '100%',
+        // height: '100%'
+        // width: '100%',
+        // height: 450,
+        ...StyleSheet.absoluteFillObject,
+        // width: Dimensions.get('window').width,
+        // height: Dimensions.get('window').height,
     },
 })
 
