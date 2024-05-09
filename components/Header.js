@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
@@ -125,7 +125,7 @@ const Header = ({ setShowSidePanel, showSidePanel }) => {
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             padding: 8,
-                            margin: 4,
+                            marginTop: 'auto',
                         }} onPress={() => setshowLogoutPoP(!showLogOutPoP)}>
                             <Text style={{
                                 width: '50%',
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginLeft: 'auto',
         width: '50%',
-        height: '100%',
+        height: Dimensions.get('window').height,
         padding: 12
     },
     LogOutModalWrapper: {
