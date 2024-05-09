@@ -615,28 +615,48 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
         <View style={styles.modalContainer}>
             <ToastManager />
             <View style={styles.modalContent}>
-                <Text style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    textAlign: 'left', width: '100%', color: 'black'
-                }}>New Task</Text>
 
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={text => setTaskName(text)}
-                        value={taskname}
-                        placeholder='task name'
-                    />
+                <View style={{
+                    width: '100%',
+                    backgroundColor: '#5A55CA',
+                    padding: 12,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        textAlign: 'left',
+                        color: 'white',
+                    }}>
+                        New Task
+                    </Text>
+                    <TouchableOpacity onPress={onClose}>
+                        <Image style={{ width: 25, height: 25 }} source={require('../images/closeWhite.png')} />
+                    </TouchableOpacity>
                 </View>
 
-                <View style={[styles.inputContainer, { marginBottom: 8 }]}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={text => setTaskDescription(text)}
-                        value={taskDescription}
-                        placeholder='task description'
-                    />
+                <View style={{
+                    width: '100%',
+                    padding: 12
+                }}>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={text => setTaskName(text)}
+                            value={taskname}
+                            placeholder='task name'
+                        />
+                    </View>
+
+                    <View style={[styles.inputContainer, { marginBottom: 8 }]}>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={text => setTaskDescription(text)}
+                            value={taskDescription}
+                            placeholder='task description'
+                        />
+                    </View>
                 </View>
 
                 <View style={styles.taskComesUnderCont}>
@@ -714,7 +734,8 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
 
                 <View style={{
                     textAlign: 'left',
-                    width: '100%'
+                    width: '100%',
+                    paddingHorizontal: 12
                 }}><Text>Task Type</Text></View>
 
                 <View style={styles.taskComesUnderCont}>
@@ -942,7 +963,8 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
 
                 <View style={{
                     textAlign: 'left',
-                    width: '100%'
+                    width: '100%',
+                    paddingHorizontal: 12
                 }}><Text>Include Travel</Text></View>
 
                 <View style={styles.taskComesUnderCont}>
@@ -984,7 +1006,8 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
 
                 <View style={{
                     textAlign: 'left',
-                    width: '100%'
+                    width: '100%',
+                    paddingHorizontal: 12
                 }}><Text>Priority level</Text></View>
 
                 <View style={styles.taskComesUnderCont}>
@@ -1041,15 +1064,15 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
                 </View>
 
                 <View style={{
-                    justifyContent: 'flex-end',
+                    justifyContent: 'center',
                     flexDirection: "row",
                     width: '100%',
                     borderTopColor: 'black',
-                    borderTopWidth: 1
+                    borderTopWidth: 1,
                     // backgroundColor: 'black'
                 }}>
 
-                    <View style={{
+                    {/* <View style={{
                         margin: 4,
                         backgroundColor: 'red',
                         color: 'white',
@@ -1065,23 +1088,32 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
                         }}>
                             <Text style={styles.closeModalButton}>Cancel</Text>
                         </TouchableOpacity>
-                    </View>
-                    <View style={{
+                    </View> */}
+                    {/* <View style={{
                         margin: 4,
                         backgroundColor: 'green',
                         color: 'white',
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderRadius: 4,
-                        paddingHorizontal: 4
+                        paddingHorizontal: 12
                     }}>
-                        <TouchableOpacity onPress={() => saveTask()} style={{
-                            margin: 4,
-                            color: 'white'
-                        }}>
-                            <Text style={styles.closeModalButton}>Save</Text>
-                        </TouchableOpacity>
-                    </View>
+                    </View> */}
+                    <TouchableOpacity onPress={() => saveTask()} style={{
+                        margin: 4,
+                        color: 'white',
+                        margin: 4,
+                        backgroundColor: 'green',
+                        color: 'white',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 4,
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        width: '50%'
+                    }}>
+                        <Text style={styles.closeModalButton}>Save</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -1185,13 +1217,16 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: '#F7F7F7',
-        padding: 15,
+        // padding: 15,
         borderRadius: 10,
         alignItems: 'center',
-        width: '94%'
+        width: '94%',
+        height: 'auto',
+        paddingBottom: 12
+        // height: Dimensions.get('window').height - 25
     },
     closeModalButton: {
-        marginTop: 10,
+        // marginTop: 10,
         fontSize: 18,
         color: 'white',
     },
@@ -1200,6 +1235,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'grey',
         marginTop: 12,
+        // padding: 12
     },
     input: {
         width: '100%',
@@ -1211,7 +1247,8 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: "row",
         justifyContent: "flex-start",
-        marginBottom: 8
+        marginBottom: 8,
+        paddingHorizontal: 12
     },
     defaultOption: {
         width: 20,
@@ -1229,7 +1266,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'flex-start',
         width: '100%',
-        marginBottom: 12
+        marginBottom: 12,
+        paddingHorizontal: 12
     },
     mapCont: {
         justifyContent: 'center',

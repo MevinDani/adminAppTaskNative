@@ -154,19 +154,26 @@ const EmpLocation = ({ setShowMap, showMap }) => {
 
                 <View style={{ width: '100%', padding: 4, maxHeight: 450 }}>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} vertical={true} nestedScrollEnabled={true}>
-                        {
-                            empIdData && empIdData.map((item, index) => (
-                                <View key={index} style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center' }}>
-                                    <Text style={{ color: 'black' }}>{item.EmpId}</Text>
-                                    <TouchableOpacity style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#8BC1F7', borderRadius: 4 }}
-                                        onPress={() => handleShowMap(item.EmpId)}
-                                    >
-                                        <Text style={{ color: 'white' }}>Show Location</Text>
-                                        <Image style={{ width: 30, height: 30, marginLeft: 8 }} source={location}></Image>
-                                    </TouchableOpacity>
-                                </View>
-                            ))
-                        }
+                        <View
+                            style={{
+                                width: '95%',
+                                backgroundColor: '#EFF3FD'
+                            }}
+                        >
+                            {
+                                empIdData && empIdData.map((item, index) => (
+                                    <View key={index} style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center', }}>
+                                        <Text style={{ color: 'green' }}>{item.EmpId}</Text>
+                                        <TouchableOpacity style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#8BC1F7', borderRadius: 4 }}
+                                            onPress={() => handleShowMap(item.EmpId)}
+                                        >
+                                            <Text style={{ color: 'white' }}>Show Location</Text>
+                                            <Image style={{ width: 30, height: 30, marginLeft: 8 }} source={location}></Image>
+                                        </TouchableOpacity>
+                                    </View>
+                                ))
+                            }
+                        </View>
                     </ScrollView>
                 </View>
             </View>
