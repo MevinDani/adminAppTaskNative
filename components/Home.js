@@ -93,6 +93,7 @@ const Home = () => {
     const [messageData, setMessageData] = useState(null);
 
 
+    const [showSidePanel, setShowSidePanel] = useState(false)
 
     const [showMap, setShowMap] = useState(false)
 
@@ -738,7 +739,7 @@ const Home = () => {
                 start={{ x: 1, y: 1 }}
                 end={{ x: 0, y: 0 }}
             >
-                <ScrollView scrollEnabled={!showMap}>
+                <ScrollView scrollEnabled={!showMap && !showSidePanel}>
 
                     <View style={{
                         justifyContent: 'center',
@@ -746,7 +747,7 @@ const Home = () => {
                     }}>
 
                         {/* header */}
-                        <Header />
+                        <Header setShowSidePanel={setShowSidePanel} showSidePanel={showSidePanel} />
                         {/* header */}
 
                         {/* projectTask */}
@@ -1113,11 +1114,21 @@ const Home = () => {
                                 </View>
                             }
 
-                            <View style={{ width: '100%', padding: 4, maxHeight: 450, backgroundColor: '#8BC1F7' }}>
-                                <ScrollView contentContainerStyle={{ flexGrow: 1 }} vertical={true} nestedScrollEnabled={true}>
+                            <View style={{
+                                width: '100%',
+                                padding: 4,
+                                maxHeight: 450,
+                                backgroundColor: '#F0F4FD',
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3,
+                                elevation: 5,
+                            }}>
+                                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }} vertical={true} nestedScrollEnabled={true}>
                                     {
                                         empIdData && empIdData.map((item, index) => (
-                                            <View key={index} style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center', backgroundColor: 'white', marginBottom: 6, borderRadius: 4 }}>
+                                            <View key={index} style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center', backgroundColor: 'white', marginBottom: 8, borderRadius: 4 }}>
                                                 <Text style={{ color: 'black' }}>{item.EmpId}</Text>
                                                 <TouchableOpacity style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#8BC1F7', borderRadius: 4 }}
                                                     onPress={() => handleShowMap(item.EmpId)}

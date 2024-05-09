@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ToastManager, { Toast } from 'toastify-react-native'
 import axios from 'axios'
@@ -108,7 +108,7 @@ const NewProject = ({ onClose }) => {
 
                 <ToastManager width={350} height={100} textStyle={{ fontSize: 17 }} />
 
-                <View style={{
+                {/* <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: 12
                 }}>
@@ -118,9 +118,29 @@ const NewProject = ({ onClose }) => {
                     }} onPress={onClose}>
                         <Text style={{ color: 'black', fontWeight: 'bold' }}>Close</Text>
                     </TouchableOpacity>
+                </View> */}
+
+                <View style={{
+                    width: '100%',
+                    backgroundColor: '#5A55CA',
+                    padding: 12,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Text style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textAlign: 'left',
+                        color: 'white',
+                    }}>
+                        New Project
+                    </Text>
+                    <TouchableOpacity onPress={onClose}>
+                        <Image style={{ width: 25, height: 25 }} source={require('../images/closeWhite.png')} />
+                    </TouchableOpacity>
                 </View>
 
-                <View style={{ width: '100%' }}>
+                <View style={{ width: '100%', padding: 12 }}>
                     <TextInput
                         style={{ borderBottomColor: 'grey', borderBottomWidth: 1, backgroundColor: 'white', marginBottom: 12 }}
                         placeholder='Description'
@@ -176,7 +196,7 @@ const styles = StyleSheet.create({
     },
     NewProjectCont: {
         backgroundColor: '#F7F7F7',
-        padding: 15,
+        // padding: 15,
         borderRadius: 10,
         alignItems: 'center',
         width: '94%',

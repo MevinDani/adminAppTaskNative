@@ -172,7 +172,7 @@ const ProjectList = ({ onClose }) => {
 
                 <ToastManager width={350} height={100} textStyle={{ fontSize: 17 }} />
 
-                <View style={{
+                {/* <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: 8
                 }}>
@@ -182,14 +182,35 @@ const ProjectList = ({ onClose }) => {
                     }} onPress={onClose}>
                         <Text style={{ color: 'black', fontWeight: 'bold' }}>Close</Text>
                     </TouchableOpacity>
+                </View> */}
+
+                <View style={{
+                    width: '100%',
+                    backgroundColor: '#5A55CA',
+                    padding: 12,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Text style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textAlign: 'left',
+                        color: 'white',
+                    }}>
+                        Project List
+                    </Text>
+                    <TouchableOpacity onPress={onClose}>
+                        <Image style={{ width: 25, height: 25 }} source={require('../images/closeWhite.png')} />
+                    </TouchableOpacity>
                 </View>
+
 
                 {
                     projectListData === null &&
                     <ActivityIndicator color='blue' size='large'></ActivityIndicator>
                 }
 
-                <ScrollView vertical={true} style={{ padding: 6, width: '100%' }}>
+                <ScrollView vertical={true} style={{ padding: 12, width: '100%' }}>
 
                     {
                         projectListData && projectListData.map((project, index) => (
@@ -284,7 +305,7 @@ const styles = StyleSheet.create({
     },
     ProjectListCont: {
         backgroundColor: '#F7F7F7',
-        padding: 15,
+        // padding: 15,
         borderRadius: 10,
         alignItems: 'center',
         width: '94%',

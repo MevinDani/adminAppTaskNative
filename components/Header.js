@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 
-const Header = () => {
+const Header = ({ setShowSidePanel, showSidePanel }) => {
     const navigation = useNavigation();
 
     const isFocused = useIsFocused();
     const route = useRoute();
 
-    const [showSidePanel, setShowSidePanel] = useState(false)
+    // const [showSidePanel, setShowSidePanel] = useState(false)
 
     const [showLogOutPoP, setshowLogoutPoP] = useState(false)
 
@@ -66,7 +66,7 @@ const Header = () => {
     };
 
 
-    // console.log(showSidePanel, 'showSidePanel')
+    console.log(showSidePanel, 'showSidePanel')
     // console.log(showLogOutPoP, 'showLogOutPoP')
     return (
         <>
@@ -97,7 +97,10 @@ const Header = () => {
                     </TouchableOpacity>
 
                     <View style={styles.sidePanelRight}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                        <TouchableOpacity style={{
+                            backgroundColor: '#F0F4FD',
+                            marginBottom: 4
+                        }} onPress={() => navigation.navigate('Home')}>
                             <View style={{
                                 padding: 8,
                                 margin: 4,
@@ -107,7 +110,10 @@ const Header = () => {
                                 }}>Home</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('CompletedTasks')}>
+                        <TouchableOpacity style={{
+                            backgroundColor: '#F0F4FD',
+                            marginBottom: 4
+                        }} onPress={() => navigation.navigate('CompletedTasks')}>
                             <View style={{
                                 padding: 8,
                                 margin: 4,
@@ -125,8 +131,11 @@ const Header = () => {
                                 width: '50%',
                                 padding: 4,
                                 fontWeight: 'bold',
-                                backgroundColor: '#f8f9fa',
-                                textAlign: 'center'
+                                // backgroundColor: '#f8f9fa',
+                                backgroundColor: 'red',
+                                color: 'white',
+                                textAlign: 'center',
+                                borderRadius: 4
                             }}>LogOut</Text>
                         </TouchableOpacity>
                     </View>

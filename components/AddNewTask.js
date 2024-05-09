@@ -624,7 +624,7 @@ const AddNewTask = ({ onClose, fetchAllTasks, showTaskSaveToast }) => {
                     justifyContent: 'space-between'
                 }}>
                     <Text style={{
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: 'white',
